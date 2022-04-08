@@ -8,12 +8,13 @@ Gem::Specification.new do |spec|
   spec.authors = ["Matthew Lyons"]
   spec.email = ["matthew@nowaffles.com"]
 
-  spec.summary = "eTODO: Write a short summary, because RubyGems requires one."
-  spec.description = "eTODO: Write a longer description or delete this line."
-  spec.homepage = "https://example.com"
+  spec.summary = "Baba is a embeddable scripting language based on ruby."
+  spec.description = spec.summary
+  spec.homepage = "https://github.com/Speak2Erase/baba"
   spec.required_ruby_version = ">= 2.6.0"
+  spec.license = "GPL-3.0"
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
+  spec.metadata["allowed_push_host"] = "rubygems.org"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
