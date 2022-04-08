@@ -1,0 +1,3 @@
+include "std/array"
+
+var array = Array(20, true)

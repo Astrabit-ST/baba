@@ -1,0 +1,14 @@
+thing Array:
+    does init(size, fill):
+        self.object = RubyObject("Array")
+        self.object.new(size, fill)
+    end
+
+    does get(index):
+        return self.object.array_get(index)
+    end
+
+    does set(index, value):
+        return self.object.array_set(index)
+    end
+end
