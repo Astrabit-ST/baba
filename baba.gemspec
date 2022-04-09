@@ -9,12 +9,9 @@ Gem::Specification.new do |spec|
   spec.email = ["matthew@nowaffles.com"]
 
   spec.summary = "Baba is a embeddable scripting language based on ruby."
-  spec.description = spec.summary
   spec.homepage = "https://github.com/Speak2Erase/baba"
   spec.required_ruby_version = ">= 2.6.0"
   spec.license = "GPL-3.0"
-
-  spec.metadata["allowed_push_host"] = "rubygems.org"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
