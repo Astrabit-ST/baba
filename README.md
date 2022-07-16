@@ -28,7 +28,7 @@ You can also create classes and methods in a "ruby extension" and load them in b
 - [x] Yield
 - [x] Resume & Pause & Autoyield
 - [ ] Switch statement
-- [ ] Next
+- [x] Next
 - [ ] Default Object superclass
 - [ ] Splat args
 - [ ] Default args

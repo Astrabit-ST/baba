@@ -90,7 +90,13 @@ class Baba
 
     def visit_break_expr(expr)
       if @current_breakable == BreakableType::NONE
-        Baba.parser_error(stmt.keyword, "Can't break from a non-breakable statement.")
+        Baba.parser_error(expr.keyword, "Can't break from a non-breakable statement.")
+      end
+    end
+
+    def visit_next_expr(expr)
+      if @current_breakable == BreakableType::NONE
+        Baba.parser_error(expr.keyword, "Can't skip in a non-breakable statement.")
       end
     end
 

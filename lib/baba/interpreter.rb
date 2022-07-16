@@ -23,6 +23,9 @@ class Baba
   class Break < RuntimeError
   end
 
+  class Next < RuntimeError
+  end
+
   class Interpreter
     attr_reader :globals
     attr_reader :yielded, :yielded_value
@@ -102,6 +105,10 @@ class Baba
 
     def visit_break_expr(expr)
       raise Break.new
+    end
+
+    def visit_next_expr(expr)
+      raise Next.new
     end
 
     def visit_class_stmt(stmt)
@@ -192,6 +199,8 @@ class Baba
           execute(stmt.body)
         rescue Break
           break
+        rescue Next
+          next
         end
       end
       nil
@@ -234,6 +243,8 @@ class Baba
         return left * right
       when PLUS
         return left + right
+      when MODULO
+        return left % right
       when GREATER
         return left > right
       when GREATER_EQUAL

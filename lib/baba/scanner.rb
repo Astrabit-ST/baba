@@ -87,6 +87,8 @@ class Baba
         add_token(STAR)
       when "/"
         add_token(SLASH)
+      when "%"
+        add_token(MODULO)
       when ";"
         add_token(SEMICOLON)
       when ":"

@@ -285,7 +285,7 @@ class Baba
     def factor
       expr = unary()
 
-      while match(SLASH, STAR)
+      while match(SLASH, STAR, MODULO)
         operator = previous()
         right = unary()
         expr = Expr::Binary.new(expr, operator, right)
@@ -341,6 +341,7 @@ class Baba
       return Expr::Literal.new(nil) if match(BLANK)
       return Expr::Break.new(previous()) if match(BREAK)
       return Expr::Self.new(previous()) if match(SELF)
+      return Expr::Next.new(previous()) if match(NEXT)
 
       if match(NUMBER, STRING)
         return Expr::Literal.new(previous.literal())

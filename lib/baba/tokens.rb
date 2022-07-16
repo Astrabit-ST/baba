@@ -10,6 +10,7 @@ class Baba
   SEMICOLON = 7 # ;
   COLON = 39 # : colons are used when marking a new statement
   DOT = 44 # .
+  MODULO = 54 # %
 
   # One-two character tokens
   NOT = 8 # ! OR not

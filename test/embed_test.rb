@@ -1,22 +1,24 @@
 require_relative "../lib/baba"
 
 baba = Baba.new
-baba.execution_limit = 100
 baba.run <<-EOS
 does main():
   var i = 0
-  while i < 1000:
+  while i < 10:
     i = i + 1
+
+    if i % 2 == 0:
+      next
+    end
+
+    yield i
   end
 end
 
 main()
 EOS
 
-i = 1
 while baba.yielded?
-  puts i
-  i += 1
+  puts baba.yielded_value
   baba.resume
 end
-puts i
