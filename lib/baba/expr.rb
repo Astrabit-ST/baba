@@ -96,6 +96,18 @@ class Baba
       end
     end
 
+    class Next
+      attr_reader :keyword
+
+      def initialize(keyword)
+        @keyword = keyword
+      end
+
+      def accept(visitor)
+        visitor.visit_next_expr(self)
+      end
+    end
+
     class Self
       attr_reader :keyword
 

@@ -157,6 +157,10 @@ class Baba
       @current_breakable = enclosing_break
     end
 
+    def visit_yield_stmt(stmt)
+      resolve(stmt.value)
+    end
+
     def visit_return_stmt(stmt)
       if @current_function == FunctionType::NONE
         Baba.parser_error(stmt.keyword, "Can't return from top-level code.")
@@ -169,10 +173,6 @@ class Baba
 
         resolve(stmt.value)
       end
-    end
-
-    def visit_rbeval_stmt(stmt)
-      resolve(stmt.expression)
     end
 
     def visit_function_stmt(stmt)

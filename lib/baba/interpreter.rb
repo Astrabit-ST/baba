@@ -11,8 +11,6 @@ require_relative "scanner"
 require_relative "parser"
 require_relative "resolver"
 
-require_relative "ruby_object"
-
 class Baba
   class Return < RuntimeError
     attr_reader :value
@@ -27,6 +25,8 @@ class Baba
 
   class Interpreter
     attr_reader :globals
+    attr_reader :yielded, :yielded_value
+    attr_accessor :execution_limit
 
     def initialize(environment = Environment.new, loaded_files = [])
       @globals = environment
@@ -34,15 +34,27 @@ class Baba
       @locals = {}
       @loaded_files = loaded_files
 
-      @globals.define("RubyObject", RubyClass.new)
+      @execution_count = 0
     end
 
     def interpret(statements)
-      begin
-        statements.each { |s| execute(s) }
-      rescue BabaRuntimeError => error
-        Baba.runtime_error(error)
+      @fiber = Fiber.new do
+        begin
+          statements.each { |s| execute(s) }
+        rescue BabaRuntimeError => error
+          Baba.runtime_error(error)
+        end
       end
+      @fiber.resume
+    end
+
+    def resume
+      raise BabaRuntimeError.new(nil, "Baba is not currently executing code.") unless @fiber.alive?
+      @fiber.resume
+    end
+
+    def running?
+      @fiber.alive?
     end
 
     def resolve(expr, depth)
@@ -55,6 +67,18 @@ class Baba
 
     def execute(stmt)
       begin
+        unless @execution_limit.nil?
+          @execution_count += 1
+          if @execution_count > @execution_limit
+            @yielded = true
+
+            Fiber.yield
+
+            @yielded = false
+            @execution_count = 0
+          end
+        end
+
         stmt.accept(self)
       rescue SystemStackError
         raise BabaRuntimeError.new(nil, "Stack level too deep (wild recursive method?)")
@@ -133,41 +157,15 @@ class Baba
       string = evaluate(stmt.expression)
 
       string += ".baba" unless File.exist?(string)
-      string = __FILE__ + "../../" + string unless File.exist?(string) # Standard library
+      string = File.join(__dir__, string) unless File.exist?(string) # Standard library
       unless File.exist?(string)
-        raise BabaRuntimeError.new(stmt.expression, "Unable to find #{stmt.expression}.")
+        raise BabaRuntimeError.new(stmt.keyword, "Unable to find #{evaluate(stmt.expression)}.")
       end
 
       return if @loaded_files.include?(string) # Don't load the same file multiple times! We could get weird stack level wackiness
       @loaded_files << string
 
-      contents = File.read(string)
-
-      scanner = Scanner.new(contents)
-      tokens = scanner.scan_tokens
-      parser = Parser.new(tokens)
-
-      statements = parser.parse
-
-      if Baba.had_error
-        @loaded_files.pop
-        return
-      end
-
-      resolver = Resolver.new(self)
-      resolver.resolve(statements)
-
-      if Baba.had_error
-        @loaded_files.pop
-        return
-      end
-
-      interpret(statements)
-    end
-
-    def visit_rbeval_stmt(stmt)
-      value = evaluate(stmt.expression)
-      eval(value)
+      # TODO
     end
 
     def visit_return_stmt(stmt)
@@ -199,6 +197,17 @@ class Baba
       nil
     end
 
+    def visit_yield_stmt(stmt)
+      value = evaluate(stmt.value)
+      @yielded = true
+      @yielded_value = value
+
+      Fiber.yield
+
+      @yielded = false
+      @yielded_value = nil
+    end
+
     def visit_assign_expr(expr)
       value = evaluate(expr.value)
 
@@ -206,7 +215,7 @@ class Baba
       unless distance.nil?
         @environment.assign_at(distance, expr.name, value)
       else
-        @globals[expr_name] = value
+        @globals[expr.name] = value
       end
 
       value
@@ -250,7 +259,7 @@ class Baba
       unless callee.kind_of?(Callable)
         raise BabaRuntimeError.new(expr.paren, "Can only call callable objects.")
       end
-      if !callee.is_a?(RubyFunction) && (arguments.size != callee.arity) # Don't check arity on ruby functions
+      if arguments.size != callee.arity
         raise BabaRuntimeError.new(expr.paren, "Expected #{callee.arity} arguments, got #{arguments.size}.")
       end
       callee.call(self, arguments)

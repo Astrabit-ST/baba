@@ -8,7 +8,7 @@ class Baba
   SLASH = 5 # /
   STAR = 6 # *
   SEMICOLON = 7 # ;
-  COLON = 39 # : (colons are used when marking a new statement), can also function as {
+  COLON = 39 # : colons are used when marking a new statement
   DOT = 44 # .
 
   # One-two character tokens
@@ -32,7 +32,7 @@ class Baba
   ELSE = 21 # else
   DOES = 22 # does (method definition)
   FOR = 23 # for
-  BLANK = 24 # blank (nil)
+  BLANK = 24 # blank
   OR = 25 # or OR ||
   AND = 26 # and OR &&
   RETURN = 27 # return
@@ -45,10 +45,13 @@ class Baba
   KEND = 38 # end, can also function as }
   BREAK = 42 # break
   INCLUDE = 48 # include
+  SWITCH = 51 # switch
+  WHEN = 52 # when
+  NEXT = 53 # next
 
-  RBEVAL = 34 # rb_eval
-  # RBFUNC = 35 # rb_func
-  # RBINSTANCECALL = 36 # rb_instance_call
+  # Special, these are more like weird functions
+  AWAIT = 49 # await
+  YIELD = 50 # yield
 
   EOF = 37
 
@@ -61,7 +64,6 @@ class Baba
     "for" => FOR,
 
     "blank" => BLANK,
-    "nil" => BLANK,
 
     "or" => OR,
     "||" => OR,
@@ -78,11 +80,9 @@ class Baba
     "true" => TRUE,
     "end" => KEND, # It's KEND because ruby is dumb
     "break" => BREAK,
+    "next" => NEXT,
 
-    "rb_eval" => RBEVAL,
     "include" => INCLUDE,
-    # "rb_func" => RBFUNC,
-    # "rb_instance_call" => RBINSTANCECALL,
 
     "not" => NOT,
     "not-equals" => NOT_EQUAL,
@@ -92,5 +92,11 @@ class Baba
     "less" => LESS,
     "greater-equal" => GREATER_EQUAL,
     "less-equal" => LESS_EQUAL,
+
+    "switch" => SWITCH,
+    "when" => WHEN,
+
+    "await" => AWAIT,
+    "yield" => YIELD,
   }
 end

@@ -18,6 +18,7 @@ task :expr do
     "Grouping : expression",
     "Literal  : value",
     "Logical  : left, operator, right",
+    "Next     : keyword",
     "Self     : keyword",
     "Super    : keyword, method",
     "Set      : object, name, value",
@@ -25,22 +26,17 @@ task :expr do
     "Variable : name",
   ]
 
-  # Print is not a part of this as its a part of the standard library
-  # Baba by default comes with NO basic methods aside from rb_eval
-
   stmt_ast = [
     "Block      : statements",
     "Class      : name, superclass, methods",
     "Expression : expression",
     "Function   : name, params, body",
     "If         : condition, then_branch, else_branch",
-    "Include    : expression",
-    "RBEval     : expression",
+    "Include    : keyword, expression",
     "Return     : keyword, value",
     "Var        : name, initializer",
     "While      : condition, body",
-  # "RBFunc     : expression",
-  # "RBICall    : expression",
+    "Yield      : keyword, value",
   ]
 
   define_ast(expr_ast, "lib/baba/", "Expr")

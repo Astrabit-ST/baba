@@ -1,3 +1,4 @@
 #!/usr/bin/env ruby
 
-require_relative '../lib/baba'
+require_relative "../lib/baba"
+Baba.new.main

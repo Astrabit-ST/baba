@@ -1,15 +1,11 @@
 # frozen_string_literal: true
 
 require_relative "baba/version"
-require_relative "baba/run"
 require_relative "baba/interpreter"
+require_relative "baba/api"
 
 class Baba
   @@had_error = false
-
-  def initialize
-    @interpreter = Interpreter.new
-  end
 
   def main
     case ARGV.length
@@ -43,6 +39,23 @@ class Baba
       @@had_error = false
     end
   end
-end
 
-Baba.new.main
+  def run(source)
+    reset
+
+    scanner = Scanner.new(source)
+    tokens = scanner.scan_tokens
+    parser = Parser.new(tokens)
+
+    statements = parser.parse
+
+    return if @@had_error
+
+    resolver = Resolver.new(@interpreter)
+    resolver.resolve(statements)
+
+    return if @@had_error
+
+    @interpreter.interpret(statements)
+  end
+end

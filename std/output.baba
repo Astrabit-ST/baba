@@ -1,7 +1,0 @@
-does print(object):
-    rb_eval "print '" + object + "'"
-end
-
-does puts(object):
-    rb_eval "puts '" + object + "'"
-end

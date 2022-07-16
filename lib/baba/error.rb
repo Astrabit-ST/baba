@@ -22,7 +22,7 @@ class Baba
     if (token.type == EOF)
       report(token.line, "at_end #{what}")
     else
-      report(token.line, "at '#{token.lexeme}', #{what}")
+      report(token.line.to_s, "'#{token.lexeme.dump}', #{what}")
     end
   end
 
@@ -35,7 +35,7 @@ class Baba
   end
 
   def self.report(line, what, line_contents = nil, character = nil)
-    warn "Error: #{what}\n"
+    warn "Error at line #{line}: #{what}\n"
     warn "#{line} | #{line_contents}" if line_contents
     warn "#{line} | " + ("~" * character) + "^ HERE" if character && line_contents
     warn "*" * 30

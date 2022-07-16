@@ -70,18 +70,17 @@ class Baba
       initializer = nil
       initializer = expression() if match(EQUAL)
 
-      # consume(SEMICOLON, "Expected ';' after variable declaration.")
       Stmt::Var.new(name, initializer)
     end
 
     def statement
       return for_statement() if match(FOR)
       return if_statement() if match(IF)
-      return rb_eval_statement() if match(RBEVAL)
       return return_statement() if match(RETURN)
       return while_statement() if match(WHILE)
+      return yield_statement() if match(YIELD)
       return Stmt::Block.new(block()) if match(COLON)
-      return Stmt::Include.new(expression()) if match(INCLUDE)
+      return Stmt::Include.new(previous(), expression()) if match(INCLUDE)
 
       return expression_statement()
     end
@@ -138,12 +137,6 @@ class Baba
       return Stmt::If.new(condition, then_branch, else_branch)
     end
 
-    def rb_eval_statement
-      value = expression()
-      # consume(SEMICOLON, "Expected ';' after value.")
-      Stmt::RBEval.new(value)
-    end
-
     def return_statement
       keyword = previous()
 
@@ -163,14 +156,25 @@ class Baba
       return Stmt::While.new(condition, body)
     end
 
+    def yield_statement
+      keyword = previous()
+
+      value = if match(SEMICOLON)
+          nil
+        else
+          expression()
+        end
+
+      Stmt::Yield.new(keyword, value)
+    end
+
     def expression_statement
       expr = expression()
-      # consume(SEMICOLON, "Expected ';' after expression")
       Stmt::Expression.new(expr)
     end
 
     def function(kind)
-      name = consume(IDENTIFIER, "Expecteded #{kind} name.")
+      name = consume(IDENTIFIER, "Expected #{kind} name.")
       consume(LEFT_PAREN, "Expected '(' after #{kind} + name.")
       parameters = []
       unless check(RIGHT_PAREN)
@@ -181,7 +185,7 @@ class Baba
       end
       consume(RIGHT_PAREN, "Expected ')' after parameters.")
 
-      consume(COLON, "Expected ':' or '{' before #{kind} body.")
+      consume(COLON, "Expected ':' before #{kind} body.")
       body = block()
       Stmt::Function.new(name, parameters, body)
     end
@@ -193,7 +197,7 @@ class Baba
       end
 
       unless check(ELSE)
-        consume(KEND, "Expected '}' or 'end' after block.")
+        consume(KEND, "Expected 'end' after block.")
       end
       statements
     end

@@ -1,29 +1,7 @@
 require_relative "instance"
-require_relative "function"
-require_relative "class"
 require_relative "runtime_error"
 
 class Baba
-  class RubyClass < BabaClass
-    def initialize
-    end
-
-    def call(interpreter, arguments)
-      klass = Kernel.const_get(arguments[0])
-      instance = RubyObject.new(klass)
-
-      return instance
-    end
-
-    def arity
-      1
-    end
-
-    def to_s
-      "RubyObject"
-    end
-  end
-
   class RubyObject < Instance
     def initialize(klass)
       super(klass)
@@ -46,7 +24,7 @@ class Baba
                end)
       end
 
-      if name.lexeme == "array_get" # Tis is not the best idea but it works
+      if name.lexeme == "array_get" # This is not the best idea but it works
         if @methods.include?("[]")
           method = klass.method("[]")
           return RubyFunction.new(method)
@@ -84,30 +62,7 @@ class Baba
     end
 
     def to_s
-      "<Ruby #{@klass}: #{@object.inspect}>"
-    end
-  end
-
-  class RubyFunction < Function
-    def initialize(method, callback = nil)
-      @method = method
-      @callback = callback
-    end
-
-    def call(interpreter, arguments)
-      ret = @method.call(*arguments)
-      if @callback
-        @callback.call(ret)
-      end
-      return ret
-    end
-
-    def arity
-      @method.arity
-    end
-
-    def to_s
-      "<ruby fn: #{@method}>"
+      "<Ruby #{@klass}: #{@object}>"
     end
   end
 end

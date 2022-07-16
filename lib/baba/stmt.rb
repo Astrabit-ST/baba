@@ -61,26 +61,14 @@ class Baba
     end
 
     class Include
-      attr_reader :expression
+      attr_reader :keyword, :expression
 
-      def initialize(expression)
-        @expression = expression
+      def initialize(keyword, expression)
+        @keyword = keyword; @expression = expression
       end
 
       def accept(visitor)
         visitor.visit_include_stmt(self)
-      end
-    end
-
-    class RBEval
-      attr_reader :expression
-
-      def initialize(expression)
-        @expression = expression
-      end
-
-      def accept(visitor)
-        visitor.visit_rbeval_stmt(self)
       end
     end
 
@@ -117,6 +105,18 @@ class Baba
 
       def accept(visitor)
         visitor.visit_while_stmt(self)
+      end
+    end
+
+    class Yield
+      attr_reader :keyword, :value
+
+      def initialize(keyword, value)
+        @keyword = keyword; @value = value
+      end
+
+      def accept(visitor)
+        visitor.visit_yield_stmt(self)
       end
     end
   end

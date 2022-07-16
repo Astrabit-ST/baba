@@ -37,7 +37,7 @@ class Baba
 
       return @enclosing[name] unless @enclosing.nil?
 
-      raise BabaRuntimeError.new(name, "Undefined variable '#{name.lexeme}'.")
+      raise BabaRuntimeError.new(name, "Undefined local variable or method '#{name.lexeme}'.")
     end
 
     def []=(name, value)
@@ -51,7 +51,7 @@ class Baba
         return
       end
 
-      raise BabaRuntimeError.new(name, "Undefined variable '#{name.lexme}'.")
+      raise BabaRuntimeError.new(name, "Undefined local variable or method '#{name.lexme}'.")
     end
   end
 end

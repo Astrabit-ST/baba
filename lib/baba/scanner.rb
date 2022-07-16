@@ -91,10 +91,6 @@ class Baba
         add_token(SEMICOLON)
       when ":"
         add_token(COLON)
-      when "{"
-        add_token(COLON)
-      when "}"
-        add_token(KEND)
       when "."
         add_token(DOT)
       when "!"
@@ -159,7 +155,7 @@ class Baba
 
     def string()
       while peek() != '"' && !eof?
-        @line += 1 if peek() == '\n'
+        @line += 1 if peek() == "\n"
         advance()
       end
 
