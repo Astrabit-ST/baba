@@ -84,6 +84,18 @@ class Baba
       end
     end
 
+    class Switch
+      attr_reader :condition, :cases, :default
+
+      def initialize(condition, cases, default)
+        @condition = condition; @cases = cases; @default = default
+      end
+
+      def accept(visitor)
+        visitor.visit_switch_stmt(self)
+      end
+    end
+
     class Var
       attr_reader :name, :initializer
 
@@ -93,6 +105,18 @@ class Baba
 
       def accept(visitor)
         visitor.visit_var_stmt(self)
+      end
+    end
+
+    class When
+      attr_reader :keyword, :condition, :body
+
+      def initialize(keyword, condition, body)
+        @keyword = keyword; @condition = condition; @body = body
+      end
+
+      def accept(visitor)
+        visitor.visit_when_stmt(self)
       end
     end
 

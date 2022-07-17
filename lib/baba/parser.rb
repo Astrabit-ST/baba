@@ -51,7 +51,7 @@ class Baba
           Expr::Variable.new(previous())
         end
 
-      consume(COLON, "Expected ':' or '{' before class body.")
+      consume(COLON, "Expected ':' before class body.")
 
       methods = []
       until check(KEND) || eof?
@@ -59,7 +59,7 @@ class Baba
         methods << function("method")
       end
 
-      consume(KEND, "Expected 'end' or '}' after class body.")
+      consume(KEND, "Expected 'end' after class body.")
 
       Stmt::Class.new(name, superclass, methods)
     end
@@ -77,6 +77,8 @@ class Baba
       return for_statement() if match(FOR)
       return if_statement() if match(IF)
       return return_statement() if match(RETURN)
+      return switch_statement() if match(SWITCH)
+      return when_statement() if match(WHEN)
       return while_statement() if match(WHILE)
       return yield_statement() if match(YIELD)
       return Stmt::Block.new(block()) if match(COLON)
@@ -147,6 +149,32 @@ class Baba
         end
 
       Stmt::Return.new(keyword, value)
+    end
+
+    def switch_statement
+      condition = expression()
+      consume(COLON, "Expected ':' after switch condition.")
+      cases = []
+      default = nil
+
+      while check(WHEN)
+        cases << statement()
+      end
+      if match(ELSE)
+        default = statement()
+      else
+        consume(KEND, "Expected 'end' after switch statement.")
+      end
+
+      return Stmt::Switch.new(condition, cases, default)
+    end
+
+    def when_statement
+      keyword = previous()
+      condition = expression()
+      body = statement()
+
+      return Stmt::When.new(keyword, condition, body)
     end
 
     def while_statement

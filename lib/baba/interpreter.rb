@@ -193,6 +193,19 @@ class Baba
       value
     end
 
+    def visit_switch_stmt(stmt)
+      condition = evaluate(stmt.condition)
+      block = stmt.default
+      stmt.cases.each do |case_|
+        case_condition = evaluate(case_.condition)
+        if case_condition == condition
+          block = case_.body
+          break
+        end
+      end
+      execute(block) unless block.nil?
+    end
+
     def visit_while_stmt(stmt)
       while truthy?(evaluate(stmt.condition))
         begin

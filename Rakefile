@@ -34,7 +34,9 @@ task :expr do
     "If         : condition, then_branch, else_branch",
     "Include    : keyword, expression",
     "Return     : keyword, value",
+    "Switch     : condition, cases, default",
     "Var        : name, initializer",
+    "When       : keyword, condition, body",
     "While      : condition, body",
     "Yield      : keyword, value",
   ]

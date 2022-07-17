@@ -27,7 +27,7 @@ You can also create classes and methods in a "ruby extension" and load them in b
 - [ ] Ruby API
 - [x] Yield
 - [x] Resume & Pause & Autoyield
-- [ ] Switch statement
+- [x] Switch statement
 - [x] Next
 - [ ] Default Object superclass
 - [ ] Splat args
@@ -43,3 +43,4 @@ You can also create classes and methods in a "ruby extension" and load them in b
 - [ ] Basic standard library (IO, Time, etc)
 - [ ] Better include statement
 - [ ] Include ruby files
+- [ ] Better error handling
