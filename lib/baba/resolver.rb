@@ -66,22 +66,22 @@ class Baba
     def declare(name)
       return if @scopes.empty?
 
-      if @scopes.last.include?(name.lexeme)
-        Baba.parser_error(name, "Already declared a variable with this name in this scope.")
+      if @scopes.last.include?(name)
+        Baba.parser_error("Already declared a variable with this name in this scope.")
       end
 
-      @scopes.last[name.lexeme] = false
+      @scopes.last[name] = false
     end
 
     def define(name)
       return if @scopes.empty?
-      @scopes.last[name.lexeme] = true
+      @scopes.last[name] = true
     end
 
     def resolve_local(expr, name)
       (0...(@scopes.size)).reverse_each do |i|
         scope = @scopes[i]
-        if scope.include?(name.lexeme)
+        if scope.include?(name)
           @interpreter.resolve(expr, @scopes.size - 1 - i)
           break
         end
@@ -96,13 +96,13 @@ class Baba
 
     def visit_break_expr(expr)
       if @current_breakable == BreakableType::NONE
-        Baba.parser_error(expr.keyword, "Can't break from a non-breakable statement.")
+        Baba.parser_error("Can't break from a non-breakable statement.")
       end
     end
 
     def visit_next_expr(expr)
       if @current_breakable == BreakableType::NONE
-        Baba.parser_error(expr.keyword, "Can't skip in a non-breakable statement.")
+        Baba.parser_error("Can't skip in a non-breakable statement.")
       end
     end
 
@@ -113,8 +113,8 @@ class Baba
       declare(stmt.name)
       define(stmt.name)
 
-      if !stmt.superclass.nil? && stmt.superclass.name.lexeme == stmt.name.lexeme
-        Baba.parser_error(stmt.superclass.name, "A thing cannot inherit from itself.")
+      if !stmt.superclass.nil? && stmt.superclass.name == stmt.name
+        Baba.parser_error("A thing cannot inherit from itself.")
       end
 
       unless stmt.superclass.nil?
@@ -130,7 +130,7 @@ class Baba
 
       stmt.methods.each do |method|
         declaration = FunctionType::METHOD
-        if method.name.lexeme == "init"
+        if method.name == "init"
           declaration = FunctionType::INIT
         end
         resolve_function(method, declaration)
@@ -172,7 +172,7 @@ class Baba
 
     def visit_when_stmt(stmt)
       if @current_switch == SwitchType::NONE
-        Baba.parser_error(stmt.keyword, "Can't use 'when' outside of a switch.")
+        Baba.parser_error("Can't use 'when' outside of a switch.")
       end
 
       resolve(stmt.condition)
@@ -195,12 +195,12 @@ class Baba
 
     def visit_return_stmt(stmt)
       if @current_function == FunctionType::NONE
-        Baba.parser_error(stmt.keyword, "Can't return from top-level code.")
+        Baba.parser_error("Can't return from top-level code.")
       end
 
       unless stmt.value.nil?
         if @current_function == FunctionType::INIT && !stmt.value.is_a?(Expr::Self)
-          Baba.parser_error(stmt.keyword, "Can't return a non-self value from an initializer.")
+          Baba.parser_error("Can't return a non-self value from an initializer.")
         end
 
         resolve(stmt.value)
@@ -223,8 +223,8 @@ class Baba
     end
 
     def visit_variable_expr(expr)
-      if !@scopes.empty? && @scopes.last[expr.name.lexeme] == false
-        Baba.parser_error(expr.name, "Can't read local variable in its own initializer.")
+      if !@scopes.empty? && @scopes.last[expr.name] == false
+        Baba.parser_error("Can't read local variable in its own initializer.")
       end
 
       resolve_local(expr, expr.name)
@@ -263,7 +263,7 @@ class Baba
 
     def visit_self_expr(expr)
       if @current_class == ClassType::NONE
-        Baba.parser_error(expr.keyword, "Can't use 'self' outside of a thing.")
+        Baba.parser_error("Can't use 'self' outside of a thing.")
       end
 
       resolve_local(expr, expr.keyword)
@@ -276,9 +276,9 @@ class Baba
 
     def visit_super_expr(expr)
       if @current_class == ClassType::NONE
-        Baba.parser_error(expr.keyword, "Can't use 'super' outside of a thing.")
+        Baba.parser_error("Can't use 'super' outside of a thing.")
       elsif @current_class == ClassType::CLASS
-        Baba.parser_error(expr.keyword, "Can't use 'super' in a thing with no super thing.")
+        Baba.parser_error("Can't use 'super' in a thing with no super thing.")
       end
 
       resolve_local(expr, expr.keyword)

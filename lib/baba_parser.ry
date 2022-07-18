@@ -163,7 +163,6 @@ class BabaParser
 end
 
 ----header
-require_relative 'lib/baba/stmt'
-require_relative 'lib/baba/expr'
-
-----inner
+require_relative 'stmt'
+require_relative 'expr'
+require_relative 'lexer'

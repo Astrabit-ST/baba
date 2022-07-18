@@ -2,29 +2,9 @@ require_relative "../lib/baba"
 
 baba = Baba.new
 baba.run <<-EOS
-if false:
-else if false:
-else:
-  yield "hi"
-end
-
-var x = 0
-while x < 5:
-  switch x - 1:
-    when 1:
-      yield "a"
-    end
-    when 2:
-      yield "b"
-    end
-    when 3:
-      yield "c"
-    end
-  else:
-    yield "no"
-  end
-  x = x + 1
-end
+for var i = 0, i < 10, i = i + 1 {
+  yield i
+}
 EOS
 
 while baba.yielded?

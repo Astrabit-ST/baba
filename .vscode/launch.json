@@ -17,11 +17,11 @@
             "type": "rdbg",
             "name": "Debug with rdbg",
             "request": "launch",
-            "script": "${workspaceFolder}/test/tester.rb",
+            "script": "${workspaceFolder}/spec/embed_test.rb",
             "args": [],
             "askParameters": false,
             "debugPort": "12345",
-            "waitLaunchTime": 3500,
+            "waitLaunchTime": 4500,
             "useBundler": false
         },
     ]

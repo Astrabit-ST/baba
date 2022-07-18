@@ -1,4 +1,3 @@
-require_relative "tokens"
 require_relative "runtime_error"
 require_relative "error"
 require_relative "environment"
@@ -7,7 +6,6 @@ require_relative "function"
 require_relative "class"
 require_relative "instance"
 
-require_relative "scanner"
 require_relative "parser"
 require_relative "resolver"
 
@@ -52,7 +50,7 @@ class Baba
     end
 
     def resume
-      raise BabaRuntimeError.new(nil, "Baba is not currently executing code.") unless @fiber.alive?
+      raise BabaRuntimeError.new("Baba is not currently executing code.") unless @fiber.alive?
       @fiber.resume
     end
 
@@ -84,7 +82,7 @@ class Baba
 
         stmt.accept(self)
       rescue SystemStackError
-        raise BabaRuntimeError.new(nil, "Stack level too deep (wild recursive method?)")
+        raise BabaRuntimeError.new("Stack level too deep (wild recursive method?)")
       end
     end
 
@@ -116,11 +114,11 @@ class Baba
       unless stmt.superclass.nil?
         superclass = evaluate(stmt.superclass)
         unless superclass.is_a?(BabaClass)
-          raise BabaRuntimeError.new(stmt.superclass.name, "Super thing must be a class.")
+          raise BabaRuntimeError.new("Super thing must be a class.")
         end
       end
 
-      @environment.define(stmt.name.lexeme, nil)
+      @environment.define(stmt.name, nil)
 
       unless stmt.superclass.nil?
         @environment = Environment.new(@environment)
@@ -130,10 +128,10 @@ class Baba
       methods = {}
       stmt.methods.each do |method|
         function = Function.new(method, @environment)
-        methods[method.name.lexeme] = function
+        methods[method.name] = function
       end
 
-      klass = BabaClass.new(stmt.name.lexeme, superclass, methods)
+      klass = BabaClass.new(stmt.name, superclass, methods)
 
       unless superclass.nil?
         @environment = @environment.enclosing
@@ -148,7 +146,7 @@ class Baba
 
     def visit_function_stmt(stmt)
       function = Function.new(stmt, @environment)
-      @environment.define(stmt.name.lexeme, function)
+      @environment.define(stmt.name, function)
     end
 
     def visit_if_stmt(stmt)
@@ -166,7 +164,7 @@ class Baba
       string += ".baba" unless File.exist?(string)
       string = File.join(__dir__, string) unless File.exist?(string) # Standard library
       unless File.exist?(string)
-        raise BabaRuntimeError.new(stmt.keyword, "Unable to find #{evaluate(stmt.expression)}.")
+        raise BabaRuntimeError.new("Unable to find #{evaluate(stmt.expression)}.")
       end
 
       return if @loaded_files.include?(string) # Don't load the same file multiple times! We could get weird stack level wackiness
@@ -189,7 +187,7 @@ class Baba
         value = evaluate(stmt.initializer)
       end
 
-      @environment.define(stmt.name.lexeme, value)
+      @environment.define(stmt.name, value)
       value
     end
 
@@ -247,28 +245,28 @@ class Baba
       left = evaluate(expr.left)
       right = evaluate(expr.right)
 
-      case expr.operator.type
-      when MINUS
+      case expr.operator
+      when "-"
         return left - right
-      when SLASH
+      when "/"
         return left / right
-      when STAR
+      when "*"
         return left * right
-      when PLUS
+      when "+"
         return left + right
-      when MODULO
+      when "%"
         return left % right
-      when GREATER
+      when ">"
         return left > right
-      when GREATER_EQUAL
+      when ">="
         return left >= right
-      when LESS
+      when "<"
         return left < right
-      when LESS_EQUAL
+      when "<="
         return left <= right
-      when NOT_EQUAL
+      when "!="
         return !equal?(left, right)
-      when EQUAL_EQUAL
+      when "=="
         return equal?(left, right)
       end
 
@@ -281,10 +279,10 @@ class Baba
       arguments = expr.arguments.map { |a| evaluate(a) }
 
       unless callee.kind_of?(Callable)
-        raise BabaRuntimeError.new(expr.paren, "Can only call callable objects.")
+        raise BabaRuntimeError.new("Can only call callable objects.")
       end
       if arguments.size != callee.arity
-        raise BabaRuntimeError.new(expr.paren, "Expected #{callee.arity} arguments, got #{arguments.size}.")
+        raise BabaRuntimeError.new("Expected #{callee.arity} arguments, got #{arguments.size}.")
       end
       callee.call(self, arguments)
     end
@@ -295,7 +293,7 @@ class Baba
         return object[expr.name]
       end
 
-      raise BabaRuntimeError.new(expr.name, "Only instances have properties.")
+      raise BabaRuntimeError.new("Only instances have properties.")
     end
 
     def visit_literal_expr(expr)
@@ -322,7 +320,7 @@ class Baba
       object = evaluate(expr.object)
 
       unless object.is_a?(Instance)
-        raise BabaRuntimeError.new(expr.name, "Only instances have fields.")
+        raise BabaRuntimeError.new("Only instances have fields.")
       end
 
       value = evaluate(expr.value)
@@ -336,10 +334,10 @@ class Baba
 
       object = @environment.get_at(distance - 1, "self")
 
-      method = superclass.find_method(expr.method.lexeme)
+      method = superclass.find_method(expr.method)
 
       if method.nil?
-        raise BabaRuntimeError.new(expr.method, "Undefined property #{expr.method.lexeme}.")
+        raise BabaRuntimeError.new("Undefined property #{expr.method}.")
       end
 
       method.bind(object)
@@ -365,7 +363,7 @@ class Baba
     def look_up_variable(name, expr)
       distance = @locals[expr]
       unless distance.nil?
-        return @environment.get_at(distance, name.lexeme)
+        return @environment.get_at(distance, name)
       else
         return @globals[name]
       end

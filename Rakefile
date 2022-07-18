@@ -79,5 +79,10 @@ task :parser do
   `racc lib/baba_parser.ry -o lib/baba/parser.rb`
 end
 
+desc "Generate lexer"
+task :lexer do
+  `rex lib/baba_lexer.rex -o lib/baba/lexer.rb`
+end
+
 desc "Generate parser"
-task :generate => [:parser]
+task :generate => [:parser, :lexer]

@@ -27,22 +27,22 @@ class Baba
     end
 
     def assign_at(distance, name, value)
-      ancestor(distance).values[name.lexeme] = value
+      ancestor(distance).values[name] = value
     end
 
     def [](name)
-      if @values.include?(name.lexeme)
-        return @values[name.lexeme]
+      if @values.include?(name)
+        return @values[name]
       end
 
       return @enclosing[name] unless @enclosing.nil?
 
-      raise BabaRuntimeError.new(name, "Undefined local variable or method '#{name.lexeme}'.")
+      raise BabaRuntimeError.new("Undefined local variable or method '#{name}'.")
     end
 
     def []=(name, value)
-      if @values.include?(name.lexeme)
-        @values[name.lexeme] = value
+      if @values.include?(name)
+        @values[name] = value
         return
       end
 
@@ -51,7 +51,7 @@ class Baba
         return
       end
 
-      raise BabaRuntimeError.new(name, "Undefined local variable or method '#{name.lexme}'.")
+      raise BabaRuntimeError.new("Undefined local variable or method '#{name}'.")
     end
   end
 end

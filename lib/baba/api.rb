@@ -1,3 +1,5 @@
+require_relative "parser"
+
 class Baba
   attr_accessor :execution_limit
 
@@ -23,5 +25,6 @@ class Baba
   def reset
     @interpreter = Interpreter.new
     @interpreter.execution_limit = @execution_limit
+    @parser = BabaParser.new
   end
 end

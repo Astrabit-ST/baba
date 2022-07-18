@@ -8,18 +8,18 @@ class Baba
     end
 
     def [](name)
-      if @fields.include?(name.lexeme)
-        return @fields[name.lexeme]
+      if @fields.include?(name)
+        return @fields[name]
       end
 
-      method = @klass.find_method(name.lexeme)
+      method = @klass.find_method(name)
       return method.bind(self) unless method.nil?
 
-      raise BabaRuntimeError.new(name, "Undefined property #{name.lexeme}.")
+      raise BabaRuntimeError.new("Undefined property #{name}.")
     end
 
     def []=(name, value)
-      @fields[name.lexeme] = value
+      @fields[name] = value
     end
 
     def to_s

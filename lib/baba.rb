@@ -2,6 +2,7 @@
 
 require_relative "baba/version"
 require_relative "baba/interpreter"
+require_relative "baba"
 require_relative "baba/api"
 
 class Baba
@@ -43,11 +44,7 @@ class Baba
   def run(source)
     reset
 
-    scanner = Scanner.new(source)
-    tokens = scanner.scan_tokens
-    parser = Parser.new(tokens)
-
-    statements = parser.parse
+    statements = @parser.scan_str(source)
 
     return if @@had_error
 

@@ -61,13 +61,4 @@ rule
 
 inner
     attr_accessor :previous
-
-    def tokenize(code)
-        scan_setup(code)
-        tokens = []
-        while token = next_token
-            tokens << token
-        end
-        tokens
-    end
 end
