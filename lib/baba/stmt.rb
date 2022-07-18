@@ -61,10 +61,10 @@ class Baba
     end
 
     class Include
-      attr_reader :keyword, :expression
+      attr_reader :expression
 
-      def initialize(keyword, expression)
-        @keyword = keyword; @expression = expression
+      def initialize(expression)
+        @expression = expression
       end
 
       def accept(visitor)
@@ -73,10 +73,10 @@ class Baba
     end
 
     class Return
-      attr_reader :keyword, :value
+      attr_reader :value
 
-      def initialize(keyword, value)
-        @keyword = keyword; @value = value
+      def initialize(value)
+        @value = value
       end
 
       def accept(visitor)
@@ -109,10 +109,10 @@ class Baba
     end
 
     class When
-      attr_reader :keyword, :condition, :body
+      attr_reader :condition, :body
 
-      def initialize(keyword, condition, body)
-        @keyword = keyword; @condition = condition; @body = body
+      def initialize(condition, body)
+        @condition = condition; @body = body
       end
 
       def accept(visitor)
@@ -133,10 +133,10 @@ class Baba
     end
 
     class Yield
-      attr_reader :keyword, :value
+      attr_reader :value
 
-      def initialize(keyword, value)
-        @keyword = keyword; @value = value
+      def initialize(value)
+        @value = value
       end
 
       def accept(visitor)

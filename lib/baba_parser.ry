@@ -1,0 +1,121 @@
+class BabaParser
+  token LEFT_PAREN RIGHT_PAREN COMMA MINUS PLUS SLASH STAR SEMICOLON LEFT_BRACE DOT MODULO
+  token NOT NOT_EQUAL EQUAL EQUAL_EQUAL GREATER LESS GREATER_EQUAL LESS_EQUAL
+  token IDENTIFIER STRING NUMBER CONSTANT
+  token THING IF ELSE DOES FOR BLANK OR AND RETURN SUPER SELF VAR WHILE FALSE TRUE RIGHT_BRACE BREAK SWITCH WHEN NEXT
+  token AWAIT YIELD ELSIF
+
+  rule
+    program: declarations
+
+    declaration: thing_declaration { return val[0] }
+    | does_declaration { return val[0] }
+    | var_declaration { return val[0] }
+    | statement { return val[0] }
+
+    declarations: # empty
+    | declaration { return val }
+    | declarations declaration { return val[0] << val[1] }
+
+    thing_declaration: THING CONSTANT LEFT_BRACE does_declarations RIGHT_BRACE { return Baba::Stmt::Class.new(val[1], nil, val[3]) }
+    | THING CONSTANT LESS CONSTANT LEFT_BRACE does_declarations RIGHT_BRACE { return Baba::Stmt::Class.new(val[1], val[3], val[5]) }
+
+    does_declaration: DOES function { return val[1] }
+
+    does_declarations: # empty
+    | does_declaration { return val }
+    | does_declarations does_declaration { return val[0] << val[1] }
+
+    var_declaration: VAR IDENTIFIER { return Baba::Stmt::Var.new(val[1], nil)  }
+    | VAR IDENTIFIER EQUAL expression { return Baba::Stmt::Var.new(val[1], val[3]) }
+
+    function: IDENTIFIER LEFT_PAREN opt_parameters RIGHT_PAREN block { return Baba::Stmt::Function.new(val[0], val[2], val[4]) }
+
+    opt_parameters: # empty
+    | IDENTIFIER COMMA opt_parameters { return [val[0], val[2]].flatten }
+    | IDENTIFIER { return val }
+
+    statement: expression { return val[0] }
+    | for_stmt { return val[0] }
+    | if_statement { return val[0] }
+    | return_statement { return val[0] }
+    | switch_statement { return val[0] }
+    | while_statement { return val[0] }
+    | yield_statement { return val[0] }
+    | block { return val[0] }
+
+    for_stmt: FOR for_initializer COMMA opt_expression COMMA opt_expression statement {
+      initializer = val[1]
+      condition = val[3]
+      increment = val[5]
+      body = val[6]
+
+      unless increment.nil?
+        body = Baba::Stmt::Block.new([body, Baba::Stmt::Expression.new(increment)])
+      end
+
+      if condition.nil?
+        condition = Baba::Expr::Literal.new(true)
+      end
+
+      body = Baba::Stmt::While.new(condition, body)
+
+      unless initializer.nil?
+        body = Baba::Stmt::Block.new([initializer, body])
+      end
+
+      return body
+    }
+
+    for_initializer: # empty
+    | var_declaration { return val[0] }
+    | expression { return val[0] }
+
+    if_statement: IF expression statement { return Baba::Stmt::If.new(val[1], val[2], nil) }
+    | IF expression statement ELSE statement { return Baba::Stmt::If.new(val[1], val[2], val[4]) }
+    | IF expression statement elsif_statement { return Baba::Stmt::If.new(val[1], val[2], val[3]) }
+
+    elsif_statement: ELSIF expression statement elsif_statement { return Baba::Stmt::If.new(val[1], val[2], val[3]) }
+    | ELSIF expression statement { return Baba::Stmt::If.new(val[1], val[2], nil) }
+    | ELSIF expression statement ELSE statement { return Baba::Stmt::If.new(val[1], val[2], val[4]) }
+
+    return_statement: RETURN expression { return Baba::Stmt::Return.new(val[1]) }
+    | RETURN { return Baba::Stmt::Return.new( nil) }
+
+    switch_statement: SWITCH expression LEFT_BRACE cases RIGHT_BRACE { return Baba::Stmt::Switch.new(val[1], val[3], nil) }
+    | SWITCH expression LEFT_BRACE cases ELSE statement RIGHT_BRACE { return Baba::Stmt::Switch.new(val[1], val[3], val[5]) }
+
+    cases: WHEN expression statement { return Baba::Stmt::When.new(val[1], val[2]) }
+    | WHEN expression statement cases { return [Baba::Stmt::When.new(val[1], val[2]), val[3]].flatten }
+
+    while_statement: WHILE expression statement { return Baba::Stmt::While.new(val[1], val[2]) }
+
+    yield_statement: YIELD { return Baba::Stmt::Yield.new(nil) }
+                   | YIELD expression { return Baba::Stmt::Yield.new(val[1]) }
+
+    block: LEFT_BRACE declarations RIGHT_BRACE { return Baba::Stmt::Block.new(val[1]) }
+
+    expression: assignment { return val[0] }
+    | primary { return val[0] }
+
+    opt_expression: # empty
+    | expression { return val[0] }
+
+    assignment: SEMICOLON
+
+    primary: IDENTIFIER { return Baba::Expr::Variable.new(val[0]) }
+    | NUMBER { return Baba::Expr::Literal.new(val[0]) }
+    | STRING { return Baba::Expr::Literal.new(val[0]) }
+    | TRUE { return Baba::Expr::Literal.new(true) }
+    | FALSE { return Baba::Expr::Literal.new(false) }
+    | BLANK { return Baba::Expr::Literal.new(nil) }
+    | SUPER DOT IDENTIFIER { return Baba::Expr::Super.new(val[2]) }
+    | LEFT_PAREN expression RIGHT_PAREN { return Baba::Expr::Grouping.new(val[1]) }
+
+end
+
+----header
+require_relative 'lib/baba/stmt'
+require_relative 'lib/baba/expr'
+
+----inner

@@ -1,0 +1,1550 @@
+state 0 contains 19 shift/reduce conflicts
+state 21 contains 9 shift/reduce conflicts
+state 24 contains 9 shift/reduce conflicts
+state 25 contains 19 shift/reduce conflicts
+state 55 contains 1 shift/reduce conflicts
+state 60 contains 2 shift/reduce conflicts
+state 81 contains 1 shift/reduce conflicts
+state 84 contains 9 shift/reduce conflicts
+state 94 contains 2 shift/reduce conflicts
+
+
+-------- Grammar --------
+
+rule 1 program: declarations
+rule 2 declaration: thing_declaration
+rule 3 declaration: does_declaration
+rule 4 declaration: var_declaration
+rule 5 declaration: statement
+rule 6 declarations: 
+rule 7 declarations: declaration
+rule 8 declarations: declarations declaration
+rule 9 thing_declaration: THING CONSTANT LEFT_BRACE does_declarations RIGHT_BRACE
+rule 10 thing_declaration: THING CONSTANT LESS CONSTANT LEFT_BRACE does_declarations RIGHT_BRACE
+rule 11 does_declaration: DOES function
+rule 12 does_declarations: 
+rule 13 does_declarations: does_declaration
+rule 14 does_declarations: does_declarations does_declaration
+rule 15 var_declaration: VAR IDENTIFIER
+rule 16 var_declaration: VAR IDENTIFIER EQUAL expression
+rule 17 function: IDENTIFIER LEFT_PAREN opt_parameters RIGHT_PAREN block
+rule 18 opt_parameters: 
+rule 19 opt_parameters: IDENTIFIER COMMA opt_parameters
+rule 20 opt_parameters: IDENTIFIER
+rule 21 statement: expression
+rule 22 statement: for_stmt
+rule 23 statement: if_statement
+rule 24 statement: return_statement
+rule 25 statement: switch_statement
+rule 26 statement: while_statement
+rule 27 statement: yield_statement
+rule 28 statement: block
+rule 29 for_stmt: FOR for_initializer COMMA opt_expression COMMA opt_expression statement
+rule 30 for_initializer: 
+rule 31 for_initializer: var_declaration
+rule 32 for_initializer: expression
+rule 33 if_statement: IF expression statement
+rule 34 if_statement: IF expression statement ELSE statement
+rule 35 if_statement: IF expression statement elsif_statement
+rule 36 elsif_statement: ELSIF expression statement elsif_statement
+rule 37 elsif_statement: ELSIF expression statement
+rule 38 elsif_statement: ELSIF expression statement ELSE statement
+rule 39 return_statement: RETURN expression
+rule 40 return_statement: RETURN
+rule 41 switch_statement: SWITCH expression LEFT_BRACE cases RIGHT_BRACE
+rule 42 switch_statement: SWITCH expression LEFT_BRACE cases ELSE statement RIGHT_BRACE
+rule 43 cases: WHEN expression statement
+rule 44 cases: WHEN expression statement cases
+rule 45 while_statement: WHILE expression statement
+rule 46 yield_statement: YIELD
+rule 47 yield_statement: YIELD expression
+rule 48 block: LEFT_BRACE declarations RIGHT_BRACE
+rule 49 expression: assignment
+rule 50 expression: primary
+rule 51 opt_expression: 
+rule 52 opt_expression: expression
+rule 53 assignment: SEMICOLON
+rule 54 primary: IDENTIFIER
+rule 55 primary: NUMBER
+rule 56 primary: STRING
+rule 57 primary: TRUE
+rule 58 primary: FALSE
+rule 59 primary: BLANK
+rule 60 primary: SUPER DOT IDENTIFIER
+rule 61 primary: LEFT_PAREN expression RIGHT_PAREN
+
+------- Symbols -------
+
+**Nonterminals, with rules where they appear
+
+  $start (48)
+    on right: 
+    on left : 
+  program (49)
+    on right: 
+    on left : 1
+  declarations (50)
+    on right: 1 8 48
+    on left : 6 7 8
+  declaration (51)
+    on right: 7 8
+    on left : 2 3 4 5
+  thing_declaration (52)
+    on right: 2
+    on left : 9 10
+  does_declaration (53)
+    on right: 3 13 14
+    on left : 11
+  var_declaration (54)
+    on right: 4 31
+    on left : 15 16
+  statement (55)
+    on right: 5 29 33 34 35 36 37 38 42 43 44 45
+    on left : 21 22 23 24 25 26 27 28
+  does_declarations (56)
+    on right: 9 10 14
+    on left : 12 13 14
+  function (57)
+    on right: 11
+    on left : 17
+  expression (58)
+    on right: 16 21 32 33 34 35 36 37 38 39 41 42 43 44 45 47 52 61
+    on left : 49 50
+  opt_parameters (59)
+    on right: 17 19
+    on left : 18 19 20
+  block (60)
+    on right: 17 28
+    on left : 48
+  for_stmt (61)
+    on right: 22
+    on left : 29
+  if_statement (62)
+    on right: 23
+    on left : 33 34 35
+  return_statement (63)
+    on right: 24
+    on left : 39 40
+  switch_statement (64)
+    on right: 25
+    on left : 41 42
+  while_statement (65)
+    on right: 26
+    on left : 45
+  yield_statement (66)
+    on right: 27
+    on left : 46 47
+  for_initializer (67)
+    on right: 29
+    on left : 30 31 32
+  opt_expression (68)
+    on right: 29
+    on left : 51 52
+  elsif_statement (69)
+    on right: 35 36
+    on left : 36 37 38
+  cases (70)
+    on right: 41 42 44
+    on left : 43 44
+  assignment (71)
+    on right: 49
+    on left : 53
+  primary (72)
+    on right: 50
+    on left : 54 55 56 57 58 59 60 61
+
+**Terminals, with rules where they appear
+
+  $end (0) 
+  error (1) 
+  LEFT_PAREN (2) 17 61
+  RIGHT_PAREN (3) 17 61
+  COMMA (4) 19 29
+  MINUS (5) 
+  PLUS (6) 
+  SLASH (7) 
+  STAR (8) 
+  SEMICOLON (9) 53
+  LEFT_BRACE (10) 9 10 41 42 48
+  DOT (11) 60
+  MODULO (12) 
+  NOT (13) 
+  NOT_EQUAL (14) 
+  EQUAL (15) 16
+  EQUAL_EQUAL (16) 
+  GREATER (17) 
+  LESS (18) 10
+  GREATER_EQUAL (19) 
+  LESS_EQUAL (20) 
+  IDENTIFIER (21) 15 16 17 19 20 54 60
+  STRING (22) 56
+  NUMBER (23) 55
+  CONSTANT (24) 9 10
+  THING (25) 9 10
+  IF (26) 33 34 35
+  ELSE (27) 34 38 42
+  DOES (28) 11
+  FOR (29) 29
+  BLANK (30) 59
+  OR (31) 
+  AND (32) 
+  RETURN (33) 39 40
+  SUPER (34) 60
+  SELF (35) 
+  VAR (36) 15 16
+  WHILE (37) 45
+  FALSE (38) 58
+  TRUE (39) 57
+  RIGHT_BRACE (40) 9 10 41 42 48
+  BREAK (41) 
+  SWITCH (42) 41 42
+  WHEN (43) 43 44
+  NEXT (44) 
+  AWAIT (45) 
+  YIELD (46) 46 47
+  ELSIF (47) 36 37 38
+
+--------- State ---------
+
+state 0
+
+
+  LEFT_PAREN    shift, and go to state 36
+  LEFT_PAREN    [reduce using rule 6 (declarations)]
+  SEMICOLON     shift, and go to state 28
+  SEMICOLON     [reduce using rule 6 (declarations)]
+  LEFT_BRACE    shift, and go to state 25
+  LEFT_BRACE    [reduce using rule 6 (declarations)]
+  IDENTIFIER    shift, and go to state 29
+  IDENTIFIER    [reduce using rule 6 (declarations)]
+  STRING        shift, and go to state 31
+  STRING        [reduce using rule 6 (declarations)]
+  NUMBER        shift, and go to state 30
+  NUMBER        [reduce using rule 6 (declarations)]
+  THING         shift, and go to state 8
+  THING         [reduce using rule 6 (declarations)]
+  IF            shift, and go to state 20
+  IF            [reduce using rule 6 (declarations)]
+  DOES          shift, and go to state 9
+  DOES          [reduce using rule 6 (declarations)]
+  FOR           shift, and go to state 19
+  FOR           [reduce using rule 6 (declarations)]
+  BLANK         shift, and go to state 34
+  BLANK         [reduce using rule 6 (declarations)]
+  RETURN        shift, and go to state 21
+  RETURN        [reduce using rule 6 (declarations)]
+  SUPER         shift, and go to state 35
+  SUPER         [reduce using rule 6 (declarations)]
+  VAR           shift, and go to state 10
+  VAR           [reduce using rule 6 (declarations)]
+  WHILE         shift, and go to state 23
+  WHILE         [reduce using rule 6 (declarations)]
+  FALSE         shift, and go to state 33
+  FALSE         [reduce using rule 6 (declarations)]
+  TRUE          shift, and go to state 32
+  TRUE          [reduce using rule 6 (declarations)]
+  SWITCH        shift, and go to state 22
+  SWITCH        [reduce using rule 6 (declarations)]
+  YIELD         shift, and go to state 24
+  YIELD         [reduce using rule 6 (declarations)]
+  $default      reduce using rule 6 (declarations)
+
+  program       go to state 1
+  declarations  go to state 2
+  thing_declaration  go to state 3
+  does_declaration  go to state 4
+  var_declaration  go to state 5
+  statement     go to state 6
+  declaration   go to state 7
+  expression    go to state 11
+  for_stmt      go to state 12
+  if_statement  go to state 13
+  return_statement  go to state 14
+  switch_statement  go to state 15
+  while_statement  go to state 16
+  yield_statement  go to state 17
+  block         go to state 18
+  assignment    go to state 26
+  primary       go to state 27
+
+state 1
+
+
+  $end          shift, and go to state 37
+
+
+state 2
+
+   1) program : declarations _
+   8) declarations : declarations _ declaration
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  LEFT_BRACE    shift, and go to state 25
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  THING         shift, and go to state 8
+  IF            shift, and go to state 20
+  DOES          shift, and go to state 9
+  FOR           shift, and go to state 19
+  BLANK         shift, and go to state 34
+  RETURN        shift, and go to state 21
+  SUPER         shift, and go to state 35
+  VAR           shift, and go to state 10
+  WHILE         shift, and go to state 23
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+  SWITCH        shift, and go to state 22
+  YIELD         shift, and go to state 24
+  $default      reduce using rule 1 (program)
+
+  thing_declaration  go to state 3
+  does_declaration  go to state 4
+  var_declaration  go to state 5
+  statement     go to state 6
+  declaration   go to state 38
+  expression    go to state 11
+  for_stmt      go to state 12
+  if_statement  go to state 13
+  return_statement  go to state 14
+  switch_statement  go to state 15
+  while_statement  go to state 16
+  yield_statement  go to state 17
+  block         go to state 18
+  assignment    go to state 26
+  primary       go to state 27
+
+state 3
+
+   2) declaration : thing_declaration _
+
+  $default      reduce using rule 2 (declaration)
+
+
+state 4
+
+   3) declaration : does_declaration _
+
+  $default      reduce using rule 3 (declaration)
+
+
+state 5
+
+   4) declaration : var_declaration _
+
+  $default      reduce using rule 4 (declaration)
+
+
+state 6
+
+   5) declaration : statement _
+
+  $default      reduce using rule 5 (declaration)
+
+
+state 7
+
+   7) declarations : declaration _
+
+  $default      reduce using rule 7 (declarations)
+
+
+state 8
+
+   9) thing_declaration : THING _ CONSTANT LEFT_BRACE does_declarations RIGHT_BRACE
+  10) thing_declaration : THING _ CONSTANT LESS CONSTANT LEFT_BRACE does_declarations RIGHT_BRACE
+
+  CONSTANT      shift, and go to state 39
+
+
+state 9
+
+  11) does_declaration : DOES _ function
+
+  IDENTIFIER    shift, and go to state 41
+
+  function      go to state 40
+
+state 10
+
+  15) var_declaration : VAR _ IDENTIFIER
+  16) var_declaration : VAR _ IDENTIFIER EQUAL expression
+
+  IDENTIFIER    shift, and go to state 42
+
+
+state 11
+
+  21) statement : expression _
+
+  $default      reduce using rule 21 (statement)
+
+
+state 12
+
+  22) statement : for_stmt _
+
+  $default      reduce using rule 22 (statement)
+
+
+state 13
+
+  23) statement : if_statement _
+
+  $default      reduce using rule 23 (statement)
+
+
+state 14
+
+  24) statement : return_statement _
+
+  $default      reduce using rule 24 (statement)
+
+
+state 15
+
+  25) statement : switch_statement _
+
+  $default      reduce using rule 25 (statement)
+
+
+state 16
+
+  26) statement : while_statement _
+
+  $default      reduce using rule 26 (statement)
+
+
+state 17
+
+  27) statement : yield_statement _
+
+  $default      reduce using rule 27 (statement)
+
+
+state 18
+
+  28) statement : block _
+
+  $default      reduce using rule 28 (statement)
+
+
+state 19
+
+  29) for_stmt : FOR _ for_initializer COMMA opt_expression COMMA opt_expression statement
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  BLANK         shift, and go to state 34
+  SUPER         shift, and go to state 35
+  VAR           shift, and go to state 10
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+  $default      reduce using rule 30 (for_initializer)
+
+  for_initializer  go to state 43
+  var_declaration  go to state 44
+  expression    go to state 45
+  assignment    go to state 26
+  primary       go to state 27
+
+state 20
+
+  33) if_statement : IF _ expression statement
+  34) if_statement : IF _ expression statement ELSE statement
+  35) if_statement : IF _ expression statement elsif_statement
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  BLANK         shift, and go to state 34
+  SUPER         shift, and go to state 35
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+
+  expression    go to state 46
+  assignment    go to state 26
+  primary       go to state 27
+
+state 21
+
+  39) return_statement : RETURN _ expression
+  40) return_statement : RETURN _
+
+  LEFT_PAREN    shift, and go to state 36
+  LEFT_PAREN    [reduce using rule 40 (return_statement)]
+  SEMICOLON     shift, and go to state 28
+  SEMICOLON     [reduce using rule 40 (return_statement)]
+  IDENTIFIER    shift, and go to state 29
+  IDENTIFIER    [reduce using rule 40 (return_statement)]
+  STRING        shift, and go to state 31
+  STRING        [reduce using rule 40 (return_statement)]
+  NUMBER        shift, and go to state 30
+  NUMBER        [reduce using rule 40 (return_statement)]
+  BLANK         shift, and go to state 34
+  BLANK         [reduce using rule 40 (return_statement)]
+  SUPER         shift, and go to state 35
+  SUPER         [reduce using rule 40 (return_statement)]
+  FALSE         shift, and go to state 33
+  FALSE         [reduce using rule 40 (return_statement)]
+  TRUE          shift, and go to state 32
+  TRUE          [reduce using rule 40 (return_statement)]
+  $default      reduce using rule 40 (return_statement)
+
+  expression    go to state 47
+  assignment    go to state 26
+  primary       go to state 27
+
+state 22
+
+  41) switch_statement : SWITCH _ expression LEFT_BRACE cases RIGHT_BRACE
+  42) switch_statement : SWITCH _ expression LEFT_BRACE cases ELSE statement RIGHT_BRACE
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  BLANK         shift, and go to state 34
+  SUPER         shift, and go to state 35
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+
+  expression    go to state 48
+  assignment    go to state 26
+  primary       go to state 27
+
+state 23
+
+  45) while_statement : WHILE _ expression statement
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  BLANK         shift, and go to state 34
+  SUPER         shift, and go to state 35
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+
+  expression    go to state 49
+  assignment    go to state 26
+  primary       go to state 27
+
+state 24
+
+  46) yield_statement : YIELD _
+  47) yield_statement : YIELD _ expression
+
+  LEFT_PAREN    shift, and go to state 36
+  LEFT_PAREN    [reduce using rule 46 (yield_statement)]
+  SEMICOLON     shift, and go to state 28
+  SEMICOLON     [reduce using rule 46 (yield_statement)]
+  IDENTIFIER    shift, and go to state 29
+  IDENTIFIER    [reduce using rule 46 (yield_statement)]
+  STRING        shift, and go to state 31
+  STRING        [reduce using rule 46 (yield_statement)]
+  NUMBER        shift, and go to state 30
+  NUMBER        [reduce using rule 46 (yield_statement)]
+  BLANK         shift, and go to state 34
+  BLANK         [reduce using rule 46 (yield_statement)]
+  SUPER         shift, and go to state 35
+  SUPER         [reduce using rule 46 (yield_statement)]
+  FALSE         shift, and go to state 33
+  FALSE         [reduce using rule 46 (yield_statement)]
+  TRUE          shift, and go to state 32
+  TRUE          [reduce using rule 46 (yield_statement)]
+  $default      reduce using rule 46 (yield_statement)
+
+  expression    go to state 50
+  assignment    go to state 26
+  primary       go to state 27
+
+state 25
+
+  48) block : LEFT_BRACE _ declarations RIGHT_BRACE
+
+  LEFT_PAREN    shift, and go to state 36
+  LEFT_PAREN    [reduce using rule 6 (declarations)]
+  SEMICOLON     shift, and go to state 28
+  SEMICOLON     [reduce using rule 6 (declarations)]
+  LEFT_BRACE    shift, and go to state 25
+  LEFT_BRACE    [reduce using rule 6 (declarations)]
+  IDENTIFIER    shift, and go to state 29
+  IDENTIFIER    [reduce using rule 6 (declarations)]
+  STRING        shift, and go to state 31
+  STRING        [reduce using rule 6 (declarations)]
+  NUMBER        shift, and go to state 30
+  NUMBER        [reduce using rule 6 (declarations)]
+  THING         shift, and go to state 8
+  THING         [reduce using rule 6 (declarations)]
+  IF            shift, and go to state 20
+  IF            [reduce using rule 6 (declarations)]
+  DOES          shift, and go to state 9
+  DOES          [reduce using rule 6 (declarations)]
+  FOR           shift, and go to state 19
+  FOR           [reduce using rule 6 (declarations)]
+  BLANK         shift, and go to state 34
+  BLANK         [reduce using rule 6 (declarations)]
+  RETURN        shift, and go to state 21
+  RETURN        [reduce using rule 6 (declarations)]
+  SUPER         shift, and go to state 35
+  SUPER         [reduce using rule 6 (declarations)]
+  VAR           shift, and go to state 10
+  VAR           [reduce using rule 6 (declarations)]
+  WHILE         shift, and go to state 23
+  WHILE         [reduce using rule 6 (declarations)]
+  FALSE         shift, and go to state 33
+  FALSE         [reduce using rule 6 (declarations)]
+  TRUE          shift, and go to state 32
+  TRUE          [reduce using rule 6 (declarations)]
+  SWITCH        shift, and go to state 22
+  SWITCH        [reduce using rule 6 (declarations)]
+  YIELD         shift, and go to state 24
+  YIELD         [reduce using rule 6 (declarations)]
+  $default      reduce using rule 6 (declarations)
+
+  thing_declaration  go to state 3
+  does_declaration  go to state 4
+  var_declaration  go to state 5
+  statement     go to state 6
+  declaration   go to state 7
+  declarations  go to state 51
+  expression    go to state 11
+  for_stmt      go to state 12
+  if_statement  go to state 13
+  return_statement  go to state 14
+  switch_statement  go to state 15
+  while_statement  go to state 16
+  yield_statement  go to state 17
+  block         go to state 18
+  assignment    go to state 26
+  primary       go to state 27
+
+state 26
+
+  49) expression : assignment _
+
+  $default      reduce using rule 49 (expression)
+
+
+state 27
+
+  50) expression : primary _
+
+  $default      reduce using rule 50 (expression)
+
+
+state 28
+
+  53) assignment : SEMICOLON _
+
+  $default      reduce using rule 53 (assignment)
+
+
+state 29
+
+  54) primary : IDENTIFIER _
+
+  $default      reduce using rule 54 (primary)
+
+
+state 30
+
+  55) primary : NUMBER _
+
+  $default      reduce using rule 55 (primary)
+
+
+state 31
+
+  56) primary : STRING _
+
+  $default      reduce using rule 56 (primary)
+
+
+state 32
+
+  57) primary : TRUE _
+
+  $default      reduce using rule 57 (primary)
+
+
+state 33
+
+  58) primary : FALSE _
+
+  $default      reduce using rule 58 (primary)
+
+
+state 34
+
+  59) primary : BLANK _
+
+  $default      reduce using rule 59 (primary)
+
+
+state 35
+
+  60) primary : SUPER _ DOT IDENTIFIER
+
+  DOT           shift, and go to state 52
+
+
+state 36
+
+  61) primary : LEFT_PAREN _ expression RIGHT_PAREN
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  BLANK         shift, and go to state 34
+  SUPER         shift, and go to state 35
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+
+  assignment    go to state 26
+  primary       go to state 27
+  expression    go to state 53
+
+state 37
+
+
+  $end          shift, and go to state 54
+
+
+state 38
+
+   8) declarations : declarations declaration _
+
+  $default      reduce using rule 8 (declarations)
+
+
+state 39
+
+   9) thing_declaration : THING CONSTANT _ LEFT_BRACE does_declarations RIGHT_BRACE
+  10) thing_declaration : THING CONSTANT _ LESS CONSTANT LEFT_BRACE does_declarations RIGHT_BRACE
+
+  LEFT_BRACE    shift, and go to state 55
+  LESS          shift, and go to state 56
+
+
+state 40
+
+  11) does_declaration : DOES function _
+
+  $default      reduce using rule 11 (does_declaration)
+
+
+state 41
+
+  17) function : IDENTIFIER _ LEFT_PAREN opt_parameters RIGHT_PAREN block
+
+  LEFT_PAREN    shift, and go to state 57
+
+
+state 42
+
+  15) var_declaration : VAR IDENTIFIER _
+  16) var_declaration : VAR IDENTIFIER _ EQUAL expression
+
+  EQUAL         shift, and go to state 58
+  $default      reduce using rule 15 (var_declaration)
+
+
+state 43
+
+  29) for_stmt : FOR for_initializer _ COMMA opt_expression COMMA opt_expression statement
+
+  COMMA         shift, and go to state 59
+
+
+state 44
+
+  31) for_initializer : var_declaration _
+
+  $default      reduce using rule 31 (for_initializer)
+
+
+state 45
+
+  32) for_initializer : expression _
+
+  $default      reduce using rule 32 (for_initializer)
+
+
+state 46
+
+  33) if_statement : IF expression _ statement
+  34) if_statement : IF expression _ statement ELSE statement
+  35) if_statement : IF expression _ statement elsif_statement
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  LEFT_BRACE    shift, and go to state 25
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  IF            shift, and go to state 20
+  FOR           shift, and go to state 19
+  BLANK         shift, and go to state 34
+  RETURN        shift, and go to state 21
+  SUPER         shift, and go to state 35
+  WHILE         shift, and go to state 23
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+  SWITCH        shift, and go to state 22
+  YIELD         shift, and go to state 24
+
+  expression    go to state 11
+  for_stmt      go to state 12
+  if_statement  go to state 13
+  return_statement  go to state 14
+  switch_statement  go to state 15
+  while_statement  go to state 16
+  yield_statement  go to state 17
+  block         go to state 18
+  statement     go to state 60
+  assignment    go to state 26
+  primary       go to state 27
+
+state 47
+
+  39) return_statement : RETURN expression _
+
+  $default      reduce using rule 39 (return_statement)
+
+
+state 48
+
+  41) switch_statement : SWITCH expression _ LEFT_BRACE cases RIGHT_BRACE
+  42) switch_statement : SWITCH expression _ LEFT_BRACE cases ELSE statement RIGHT_BRACE
+
+  LEFT_BRACE    shift, and go to state 61
+
+
+state 49
+
+  45) while_statement : WHILE expression _ statement
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  LEFT_BRACE    shift, and go to state 25
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  IF            shift, and go to state 20
+  FOR           shift, and go to state 19
+  BLANK         shift, and go to state 34
+  RETURN        shift, and go to state 21
+  SUPER         shift, and go to state 35
+  WHILE         shift, and go to state 23
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+  SWITCH        shift, and go to state 22
+  YIELD         shift, and go to state 24
+
+  expression    go to state 11
+  for_stmt      go to state 12
+  if_statement  go to state 13
+  return_statement  go to state 14
+  switch_statement  go to state 15
+  while_statement  go to state 16
+  yield_statement  go to state 17
+  block         go to state 18
+  statement     go to state 62
+  assignment    go to state 26
+  primary       go to state 27
+
+state 50
+
+  47) yield_statement : YIELD expression _
+
+  $default      reduce using rule 47 (yield_statement)
+
+
+state 51
+
+   8) declarations : declarations _ declaration
+  48) block : LEFT_BRACE declarations _ RIGHT_BRACE
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  LEFT_BRACE    shift, and go to state 25
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  THING         shift, and go to state 8
+  IF            shift, and go to state 20
+  DOES          shift, and go to state 9
+  FOR           shift, and go to state 19
+  BLANK         shift, and go to state 34
+  RETURN        shift, and go to state 21
+  SUPER         shift, and go to state 35
+  VAR           shift, and go to state 10
+  WHILE         shift, and go to state 23
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+  RIGHT_BRACE   shift, and go to state 63
+  SWITCH        shift, and go to state 22
+  YIELD         shift, and go to state 24
+
+  thing_declaration  go to state 3
+  does_declaration  go to state 4
+  var_declaration  go to state 5
+  statement     go to state 6
+  declaration   go to state 38
+  expression    go to state 11
+  for_stmt      go to state 12
+  if_statement  go to state 13
+  return_statement  go to state 14
+  switch_statement  go to state 15
+  while_statement  go to state 16
+  yield_statement  go to state 17
+  block         go to state 18
+  assignment    go to state 26
+  primary       go to state 27
+
+state 52
+
+  60) primary : SUPER DOT _ IDENTIFIER
+
+  IDENTIFIER    shift, and go to state 64
+
+
+state 53
+
+  61) primary : LEFT_PAREN expression _ RIGHT_PAREN
+
+  RIGHT_PAREN   shift, and go to state 65
+
+
+state 54
+
+
+  $default      accept
+
+
+state 55
+
+   9) thing_declaration : THING CONSTANT LEFT_BRACE _ does_declarations RIGHT_BRACE
+
+  DOES          shift, and go to state 9
+  DOES          [reduce using rule 12 (does_declarations)]
+  $default      reduce using rule 12 (does_declarations)
+
+  does_declarations  go to state 66
+  does_declaration  go to state 67
+
+state 56
+
+  10) thing_declaration : THING CONSTANT LESS _ CONSTANT LEFT_BRACE does_declarations RIGHT_BRACE
+
+  CONSTANT      shift, and go to state 68
+
+
+state 57
+
+  17) function : IDENTIFIER LEFT_PAREN _ opt_parameters RIGHT_PAREN block
+
+  IDENTIFIER    shift, and go to state 70
+  $default      reduce using rule 18 (opt_parameters)
+
+  opt_parameters  go to state 69
+
+state 58
+
+  16) var_declaration : VAR IDENTIFIER EQUAL _ expression
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  BLANK         shift, and go to state 34
+  SUPER         shift, and go to state 35
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+
+  expression    go to state 71
+  assignment    go to state 26
+  primary       go to state 27
+
+state 59
+
+  29) for_stmt : FOR for_initializer COMMA _ opt_expression COMMA opt_expression statement
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  BLANK         shift, and go to state 34
+  SUPER         shift, and go to state 35
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+  $default      reduce using rule 51 (opt_expression)
+
+  opt_expression  go to state 72
+  assignment    go to state 26
+  primary       go to state 27
+  expression    go to state 73
+
+state 60
+
+  33) if_statement : IF expression statement _
+  34) if_statement : IF expression statement _ ELSE statement
+  35) if_statement : IF expression statement _ elsif_statement
+
+  ELSE          shift, and go to state 74
+  ELSE          [reduce using rule 33 (if_statement)]
+  ELSIF         shift, and go to state 76
+  ELSIF         [reduce using rule 33 (if_statement)]
+  $default      reduce using rule 33 (if_statement)
+
+  elsif_statement  go to state 75
+
+state 61
+
+  41) switch_statement : SWITCH expression LEFT_BRACE _ cases RIGHT_BRACE
+  42) switch_statement : SWITCH expression LEFT_BRACE _ cases ELSE statement RIGHT_BRACE
+
+  WHEN          shift, and go to state 78
+
+  cases         go to state 77
+
+state 62
+
+  45) while_statement : WHILE expression statement _
+
+  $default      reduce using rule 45 (while_statement)
+
+
+state 63
+
+  48) block : LEFT_BRACE declarations RIGHT_BRACE _
+
+  $default      reduce using rule 48 (block)
+
+
+state 64
+
+  60) primary : SUPER DOT IDENTIFIER _
+
+  $default      reduce using rule 60 (primary)
+
+
+state 65
+
+  61) primary : LEFT_PAREN expression RIGHT_PAREN _
+
+  $default      reduce using rule 61 (primary)
+
+
+state 66
+
+   9) thing_declaration : THING CONSTANT LEFT_BRACE does_declarations _ RIGHT_BRACE
+  14) does_declarations : does_declarations _ does_declaration
+
+  DOES          shift, and go to state 9
+  RIGHT_BRACE   shift, and go to state 79
+
+  does_declaration  go to state 80
+
+state 67
+
+  13) does_declarations : does_declaration _
+
+  $default      reduce using rule 13 (does_declarations)
+
+
+state 68
+
+  10) thing_declaration : THING CONSTANT LESS CONSTANT _ LEFT_BRACE does_declarations RIGHT_BRACE
+
+  LEFT_BRACE    shift, and go to state 81
+
+
+state 69
+
+  17) function : IDENTIFIER LEFT_PAREN opt_parameters _ RIGHT_PAREN block
+
+  RIGHT_PAREN   shift, and go to state 82
+
+
+state 70
+
+  19) opt_parameters : IDENTIFIER _ COMMA opt_parameters
+  20) opt_parameters : IDENTIFIER _
+
+  COMMA         shift, and go to state 83
+  $default      reduce using rule 20 (opt_parameters)
+
+
+state 71
+
+  16) var_declaration : VAR IDENTIFIER EQUAL expression _
+
+  $default      reduce using rule 16 (var_declaration)
+
+
+state 72
+
+  29) for_stmt : FOR for_initializer COMMA opt_expression _ COMMA opt_expression statement
+
+  COMMA         shift, and go to state 84
+
+
+state 73
+
+  52) opt_expression : expression _
+
+  $default      reduce using rule 52 (opt_expression)
+
+
+state 74
+
+  34) if_statement : IF expression statement ELSE _ statement
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  LEFT_BRACE    shift, and go to state 25
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  IF            shift, and go to state 20
+  FOR           shift, and go to state 19
+  BLANK         shift, and go to state 34
+  RETURN        shift, and go to state 21
+  SUPER         shift, and go to state 35
+  WHILE         shift, and go to state 23
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+  SWITCH        shift, and go to state 22
+  YIELD         shift, and go to state 24
+
+  expression    go to state 11
+  for_stmt      go to state 12
+  if_statement  go to state 13
+  return_statement  go to state 14
+  switch_statement  go to state 15
+  while_statement  go to state 16
+  yield_statement  go to state 17
+  block         go to state 18
+  statement     go to state 85
+  assignment    go to state 26
+  primary       go to state 27
+
+state 75
+
+  35) if_statement : IF expression statement elsif_statement _
+
+  $default      reduce using rule 35 (if_statement)
+
+
+state 76
+
+  36) elsif_statement : ELSIF _ expression statement elsif_statement
+  37) elsif_statement : ELSIF _ expression statement
+  38) elsif_statement : ELSIF _ expression statement ELSE statement
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  BLANK         shift, and go to state 34
+  SUPER         shift, and go to state 35
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+
+  expression    go to state 86
+  assignment    go to state 26
+  primary       go to state 27
+
+state 77
+
+  41) switch_statement : SWITCH expression LEFT_BRACE cases _ RIGHT_BRACE
+  42) switch_statement : SWITCH expression LEFT_BRACE cases _ ELSE statement RIGHT_BRACE
+
+  ELSE          shift, and go to state 88
+  RIGHT_BRACE   shift, and go to state 87
+
+
+state 78
+
+  43) cases : WHEN _ expression statement
+  44) cases : WHEN _ expression statement cases
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  BLANK         shift, and go to state 34
+  SUPER         shift, and go to state 35
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+
+  expression    go to state 89
+  assignment    go to state 26
+  primary       go to state 27
+
+state 79
+
+   9) thing_declaration : THING CONSTANT LEFT_BRACE does_declarations RIGHT_BRACE _
+
+  $default      reduce using rule 9 (thing_declaration)
+
+
+state 80
+
+  14) does_declarations : does_declarations does_declaration _
+
+  $default      reduce using rule 14 (does_declarations)
+
+
+state 81
+
+  10) thing_declaration : THING CONSTANT LESS CONSTANT LEFT_BRACE _ does_declarations RIGHT_BRACE
+
+  DOES          shift, and go to state 9
+  DOES          [reduce using rule 12 (does_declarations)]
+  $default      reduce using rule 12 (does_declarations)
+
+  does_declarations  go to state 90
+  does_declaration  go to state 67
+
+state 82
+
+  17) function : IDENTIFIER LEFT_PAREN opt_parameters RIGHT_PAREN _ block
+
+  LEFT_BRACE    shift, and go to state 25
+
+  block         go to state 91
+
+state 83
+
+  19) opt_parameters : IDENTIFIER COMMA _ opt_parameters
+
+  IDENTIFIER    shift, and go to state 70
+  $default      reduce using rule 18 (opt_parameters)
+
+  opt_parameters  go to state 92
+
+state 84
+
+  29) for_stmt : FOR for_initializer COMMA opt_expression COMMA _ opt_expression statement
+
+  LEFT_PAREN    shift, and go to state 36
+  LEFT_PAREN    [reduce using rule 51 (opt_expression)]
+  SEMICOLON     shift, and go to state 28
+  SEMICOLON     [reduce using rule 51 (opt_expression)]
+  IDENTIFIER    shift, and go to state 29
+  IDENTIFIER    [reduce using rule 51 (opt_expression)]
+  STRING        shift, and go to state 31
+  STRING        [reduce using rule 51 (opt_expression)]
+  NUMBER        shift, and go to state 30
+  NUMBER        [reduce using rule 51 (opt_expression)]
+  BLANK         shift, and go to state 34
+  BLANK         [reduce using rule 51 (opt_expression)]
+  SUPER         shift, and go to state 35
+  SUPER         [reduce using rule 51 (opt_expression)]
+  FALSE         shift, and go to state 33
+  FALSE         [reduce using rule 51 (opt_expression)]
+  TRUE          shift, and go to state 32
+  TRUE          [reduce using rule 51 (opt_expression)]
+  $default      reduce using rule 51 (opt_expression)
+
+  opt_expression  go to state 93
+  assignment    go to state 26
+  primary       go to state 27
+  expression    go to state 73
+
+state 85
+
+  34) if_statement : IF expression statement ELSE statement _
+
+  $default      reduce using rule 34 (if_statement)
+
+
+state 86
+
+  36) elsif_statement : ELSIF expression _ statement elsif_statement
+  37) elsif_statement : ELSIF expression _ statement
+  38) elsif_statement : ELSIF expression _ statement ELSE statement
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  LEFT_BRACE    shift, and go to state 25
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  IF            shift, and go to state 20
+  FOR           shift, and go to state 19
+  BLANK         shift, and go to state 34
+  RETURN        shift, and go to state 21
+  SUPER         shift, and go to state 35
+  WHILE         shift, and go to state 23
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+  SWITCH        shift, and go to state 22
+  YIELD         shift, and go to state 24
+
+  expression    go to state 11
+  for_stmt      go to state 12
+  if_statement  go to state 13
+  return_statement  go to state 14
+  switch_statement  go to state 15
+  while_statement  go to state 16
+  yield_statement  go to state 17
+  block         go to state 18
+  statement     go to state 94
+  assignment    go to state 26
+  primary       go to state 27
+
+state 87
+
+  41) switch_statement : SWITCH expression LEFT_BRACE cases RIGHT_BRACE _
+
+  $default      reduce using rule 41 (switch_statement)
+
+
+state 88
+
+  42) switch_statement : SWITCH expression LEFT_BRACE cases ELSE _ statement RIGHT_BRACE
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  LEFT_BRACE    shift, and go to state 25
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  IF            shift, and go to state 20
+  FOR           shift, and go to state 19
+  BLANK         shift, and go to state 34
+  RETURN        shift, and go to state 21
+  SUPER         shift, and go to state 35
+  WHILE         shift, and go to state 23
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+  SWITCH        shift, and go to state 22
+  YIELD         shift, and go to state 24
+
+  expression    go to state 11
+  for_stmt      go to state 12
+  if_statement  go to state 13
+  return_statement  go to state 14
+  switch_statement  go to state 15
+  while_statement  go to state 16
+  yield_statement  go to state 17
+  block         go to state 18
+  statement     go to state 95
+  assignment    go to state 26
+  primary       go to state 27
+
+state 89
+
+  43) cases : WHEN expression _ statement
+  44) cases : WHEN expression _ statement cases
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  LEFT_BRACE    shift, and go to state 25
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  IF            shift, and go to state 20
+  FOR           shift, and go to state 19
+  BLANK         shift, and go to state 34
+  RETURN        shift, and go to state 21
+  SUPER         shift, and go to state 35
+  WHILE         shift, and go to state 23
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+  SWITCH        shift, and go to state 22
+  YIELD         shift, and go to state 24
+
+  expression    go to state 11
+  for_stmt      go to state 12
+  if_statement  go to state 13
+  return_statement  go to state 14
+  switch_statement  go to state 15
+  while_statement  go to state 16
+  yield_statement  go to state 17
+  block         go to state 18
+  statement     go to state 96
+  assignment    go to state 26
+  primary       go to state 27
+
+state 90
+
+  10) thing_declaration : THING CONSTANT LESS CONSTANT LEFT_BRACE does_declarations _ RIGHT_BRACE
+  14) does_declarations : does_declarations _ does_declaration
+
+  DOES          shift, and go to state 9
+  RIGHT_BRACE   shift, and go to state 97
+
+  does_declaration  go to state 80
+
+state 91
+
+  17) function : IDENTIFIER LEFT_PAREN opt_parameters RIGHT_PAREN block _
+
+  $default      reduce using rule 17 (function)
+
+
+state 92
+
+  19) opt_parameters : IDENTIFIER COMMA opt_parameters _
+
+  $default      reduce using rule 19 (opt_parameters)
+
+
+state 93
+
+  29) for_stmt : FOR for_initializer COMMA opt_expression COMMA opt_expression _ statement
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  LEFT_BRACE    shift, and go to state 25
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  IF            shift, and go to state 20
+  FOR           shift, and go to state 19
+  BLANK         shift, and go to state 34
+  RETURN        shift, and go to state 21
+  SUPER         shift, and go to state 35
+  WHILE         shift, and go to state 23
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+  SWITCH        shift, and go to state 22
+  YIELD         shift, and go to state 24
+
+  expression    go to state 11
+  for_stmt      go to state 12
+  if_statement  go to state 13
+  return_statement  go to state 14
+  switch_statement  go to state 15
+  while_statement  go to state 16
+  yield_statement  go to state 17
+  block         go to state 18
+  statement     go to state 98
+  assignment    go to state 26
+  primary       go to state 27
+
+state 94
+
+  36) elsif_statement : ELSIF expression statement _ elsif_statement
+  37) elsif_statement : ELSIF expression statement _
+  38) elsif_statement : ELSIF expression statement _ ELSE statement
+
+  ELSE          shift, and go to state 100
+  ELSE          [reduce using rule 37 (elsif_statement)]
+  ELSIF         shift, and go to state 76
+  ELSIF         [reduce using rule 37 (elsif_statement)]
+  $default      reduce using rule 37 (elsif_statement)
+
+  elsif_statement  go to state 99
+
+state 95
+
+  42) switch_statement : SWITCH expression LEFT_BRACE cases ELSE statement _ RIGHT_BRACE
+
+  RIGHT_BRACE   shift, and go to state 101
+
+
+state 96
+
+  43) cases : WHEN expression statement _
+  44) cases : WHEN expression statement _ cases
+
+  WHEN          shift, and go to state 78
+  $default      reduce using rule 43 (cases)
+
+  cases         go to state 102
+
+state 97
+
+  10) thing_declaration : THING CONSTANT LESS CONSTANT LEFT_BRACE does_declarations RIGHT_BRACE _
+
+  $default      reduce using rule 10 (thing_declaration)
+
+
+state 98
+
+  29) for_stmt : FOR for_initializer COMMA opt_expression COMMA opt_expression statement _
+
+  $default      reduce using rule 29 (for_stmt)
+
+
+state 99
+
+  36) elsif_statement : ELSIF expression statement elsif_statement _
+
+  $default      reduce using rule 36 (elsif_statement)
+
+
+state 100
+
+  38) elsif_statement : ELSIF expression statement ELSE _ statement
+
+  LEFT_PAREN    shift, and go to state 36
+  SEMICOLON     shift, and go to state 28
+  LEFT_BRACE    shift, and go to state 25
+  IDENTIFIER    shift, and go to state 29
+  STRING        shift, and go to state 31
+  NUMBER        shift, and go to state 30
+  IF            shift, and go to state 20
+  FOR           shift, and go to state 19
+  BLANK         shift, and go to state 34
+  RETURN        shift, and go to state 21
+  SUPER         shift, and go to state 35
+  WHILE         shift, and go to state 23
+  FALSE         shift, and go to state 33
+  TRUE          shift, and go to state 32
+  SWITCH        shift, and go to state 22
+  YIELD         shift, and go to state 24
+
+  expression    go to state 11
+  for_stmt      go to state 12
+  if_statement  go to state 13
+  return_statement  go to state 14
+  switch_statement  go to state 15
+  while_statement  go to state 16
+  yield_statement  go to state 17
+  block         go to state 18
+  statement     go to state 103
+  assignment    go to state 26
+  primary       go to state 27
+
+state 101
+
+  42) switch_statement : SWITCH expression LEFT_BRACE cases ELSE statement RIGHT_BRACE _
+
+  $default      reduce using rule 42 (switch_statement)
+
+
+state 102
+
+  44) cases : WHEN expression statement cases _
+
+  $default      reduce using rule 44 (cases)
+
+
+state 103
+
+  38) elsif_statement : ELSIF expression statement ELSE statement _
+
+  $default      reduce using rule 38 (elsif_statement)
+

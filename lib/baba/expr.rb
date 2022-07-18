@@ -25,10 +25,10 @@ class Baba
     end
 
     class Break
-      attr_reader :keyword
+      attr_reader 
 
-      def initialize(keyword)
-        @keyword = keyword
+      def initialize()
+        
       end
 
       def accept(visitor)
@@ -97,10 +97,10 @@ class Baba
     end
 
     class Next
-      attr_reader :keyword
+      attr_reader 
 
-      def initialize(keyword)
-        @keyword = keyword
+      def initialize()
+        
       end
 
       def accept(visitor)
@@ -109,10 +109,10 @@ class Baba
     end
 
     class Self
-      attr_reader :keyword
+      attr_reader 
 
-      def initialize(keyword)
-        @keyword = keyword
+      def initialize()
+        
       end
 
       def accept(visitor)
@@ -121,10 +121,10 @@ class Baba
     end
 
     class Super
-      attr_reader :keyword, :method
+      attr_reader :method
 
-      def initialize(keyword, method)
-        @keyword = keyword; @method = method
+      def initialize(method)
+        @method = method
       end
 
       def accept(visitor)

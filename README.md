@@ -1,7 +1,7 @@
 # baba
 
 baba is an embeddable scripting language which runs inside of ruby, and can seamlessly interop with ruby functions and objects.
-It has a semi ruby inspired syntax with `:` and `end` being used to mark the beginning and end of things.
+It is closest to C# in syntax, although does not feature semicolons at all.
 There are no primitives in baba- only objects.
 
 # Embedding in ruby
@@ -33,6 +33,7 @@ You can also create classes and methods in a "ruby extension" and load them in b
 - [ ] Splat args
 - [ ] Default args
 - [ ] rb_call
+- [ ] Move to rexical and racc
 - [ ] Lists
 - [ ] String class
 - [ ] Number class

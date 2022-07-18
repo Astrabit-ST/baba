@@ -1,0 +1,52 @@
+[
+    [0] #<Baba::Stmt::Var
+        attr_reader :initializer = #<Baba::Expr::Literal
+            attr_reader :value = 1.0
+        >,
+        attr_reader :name = "a"
+    >,
+    [1] #<Baba::Stmt::Switch
+        attr_reader :cases = [
+            [0] #<Baba::Stmt::When
+                attr_reader :body = #<Baba::Stmt::Block
+                    attr_reader :statements = [
+                        [0] #<Baba::Stmt::Yield
+                            attr_reader :value = #<Baba::Expr::Literal
+                                attr_reader :value = "\"a\""
+                            >
+                        >
+                    ]
+                >,
+                attr_reader :condition = #<Baba::Expr::Literal
+                    attr_reader :value = 1.0
+                >
+            >,
+            [1] #<Baba::Stmt::When
+                attr_reader :body = #<Baba::Stmt::Block
+                    attr_reader :statements = [
+                        [0] #<Baba::Stmt::Yield
+                            attr_reader :value = #<Baba::Expr::Literal
+                                attr_reader :value = "\"b\""
+                            >
+                        >
+                    ]
+                >,
+                attr_reader :condition = #<Baba::Expr::Literal
+                    attr_reader :value = 2.0
+                >
+            >
+        ],
+        attr_reader :condition = #<Baba::Expr::Variable
+            attr_reader :name = "a"
+        >,
+        attr_reader :default = #<Baba::Stmt::Block
+            attr_reader :statements = [
+                [0] #<Baba::Stmt::Yield
+                    attr_reader :value = #<Baba::Expr::Literal
+                        attr_reader :value = "\"c\""
+                    >
+                >
+            ]
+        >
+    >
+]

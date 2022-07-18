@@ -12,15 +12,15 @@ task :expr do
   expr_ast = [
     "Assign   : name, value",
     "Binary   : left, operator, right",
-    "Break    : keyword",
+    "Break    : ",
     "Call     : callee, paren, arguments",
     "Get      : object, name",
     "Grouping : expression",
     "Literal  : value",
     "Logical  : left, operator, right",
-    "Next     : keyword",
-    "Self     : keyword",
-    "Super    : keyword, method",
+    "Next     : ",
+    "Self     : ",
+    "Super    : method",
     "Set      : object, name, value",
     "Unary    : operator, right",
     "Variable : name",
@@ -32,13 +32,13 @@ task :expr do
     "Expression : expression",
     "Function   : name, params, body",
     "If         : condition, then_branch, else_branch",
-    "Include    : keyword, expression",
-    "Return     : keyword, value",
+    "Include    : expression",
+    "Return     : value",
     "Switch     : condition, cases, default",
     "Var        : name, initializer",
-    "When       : keyword, condition, body",
+    "When       : condition, body",
     "While      : condition, body",
-    "Yield      : keyword, value",
+    "Yield      : value",
   ]
 
   define_ast(expr_ast, "lib/baba/", "Expr")
@@ -73,3 +73,11 @@ def define_ast(ast, out_dir, base_name)
   f.puts "  end"
   f.puts "end"
 end
+
+desc "Generate parser"
+task :parser do
+  `racc lib/baba_parser.ry -o lib/baba/parser.rb`
+end
+
+desc "Generate parser"
+task :generate => [:parser]
