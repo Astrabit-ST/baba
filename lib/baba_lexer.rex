@@ -21,7 +21,7 @@ rule
                 \*                            { [:STAR, "*"] }
                 ;                             { [:SEMICOLON, ";"] }
                 \{                            { [:LEFT_BRACE, "{"] }
-                \}                            { state = previous; [:RIGHT_BRACE, "}"] }
+                \}                            { [:RIGHT_BRACE, "}"] }
                 \.                            { [:DOT, "."] }
                 %                             { [:MODULO, "%"] }
                 !=                            { [:NOT_EQUAL, "!="] }
@@ -36,29 +36,25 @@ rule
                 if                            { [:IF, "if"] }
                 else                          { [:ELSE, "else"] }
                 elsif                         { [:ELSIF, "elsif"] }
-                does                          { previous = state; state = :function; [:DOES, "does"] }
-                for                           { previous = state; state = :breakable; [:FOR, "for"] }
+                does                          { [:DOES, "does"] }
+                for                           { [:FOR, "for"] }
                 or                            { [:OR, "or"] }
                 \|\|                          { [:OR, "||"] }
                 and                           { [:AND, "and"] }
                 &&                            { [:AND, "&&"] }
-    :function   return                        { [:RETURN, "return"] }
-    :function   super                         { [:SUPER, "super"] }
-    :function   self                          { [:SELF, "self"] }
+                return                        { [:RETURN, "return"] }
+                super                         { [:SUPER, "super"] }
+                self                          { [:SELF, "self"] }
                 var                           { [:VAR, "var"] }
-                while                         { previous = :state; state = :breakable; [:WHILE, "while"] }
+                while                         { [:WHILE, "while"] }
                 false                         { [:FALSE, false] }
                 true                          { [:TRUE, true] }
-    :breakable  break                         { [:BREAK, "break"] }
+                break                         { [:BREAK, "break"] }
                 switch                        { [:SWITCH, "switch"] }
                 when                          { [:WHEN, "when"] }
-    :breakable  next                          { [:NEXT, "next"] }
+                next                          { [:NEXT, "next"] }
                 await                         { [:AWAIT, "await"] }
                 yield                         { [:YIELD, "yield"] }
                 {CONSTANT}                    { [:CONSTANT, text] }
                 {ALPHA}({ALPHA}|{DIGIT})*     { [:IDENTIFIER, text] }
-
-
-inner
-    attr_accessor :previous
 end

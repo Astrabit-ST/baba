@@ -13,7 +13,7 @@ class BabaParser
     | var_declaration
     | statement
 
-    declarations: # empty
+    declarations: { return [] }
     | declaration { return val }
     | declarations declaration { return val[0] << val[1] }
 
@@ -22,7 +22,7 @@ class BabaParser
 
     does_declaration: DOES function { return val[1] }
 
-    does_declarations: # empty
+    does_declarations: { return [] }
     | does_declaration { return val }
     | does_declarations does_declaration { return val[0] << val[1] }
 
@@ -31,7 +31,7 @@ class BabaParser
 
     function: IDENTIFIER LEFT_PAREN opt_parameters RIGHT_PAREN block { return Baba::Stmt::Function.new(val[0], val[2], val[4]) }
 
-    opt_parameters: # empty
+    opt_parameters: { return [] }
     | IDENTIFIER { return val }
     | IDENTIFIER COMMA opt_parameters { return [val[0], val[2]].flatten }
 
@@ -44,28 +44,7 @@ class BabaParser
     | yield_statement
     | block
 
-    for_stmt: FOR for_initializer COMMA opt_expression COMMA opt_expression statement {
-      initializer = val[1]
-      condition = val[3]
-      increment = val[5]
-      body = val[6]
-
-      unless increment.nil?
-        body = Baba::Stmt::Block.new([body, Baba::Stmt::Expression.new(increment)])
-      end
-
-      if condition.nil?
-        condition = Baba::Expr::Literal.new(true)
-      end
-
-      body = Baba::Stmt::While.new(condition, body)
-
-      unless initializer.nil?
-        body = Baba::Stmt::Block.new([initializer, body])
-      end
-
-      return body
-    }
+    for_stmt: FOR for_initializer COMMA opt_expression COMMA opt_expression statement { return Baba::Stmt::For.new(val[1], val[3], val[5], val[6]) }
 
     for_initializer: # empty
     | var_declaration
@@ -147,9 +126,9 @@ class BabaParser
     | call LEFT_PAREN opt_arguments RIGHT_PAREN { return Baba::Expr::Call.new(val[0], val[2]) }
     | call DOT IDENTIFIER { return Baba::Expr::Get.new(val[0], val[2]) }
 
-    opt_arguments: # empty
+    opt_arguments: { return [] }
     | expression { return val }
-    | expression COMMA opt_parameters { return [val[0], val[2]].flatten }
+    | expression COMMA opt_arguments { return [val[0], val[2]].flatten }
 
     primary: IDENTIFIER { return Baba::Expr::Variable.new(val[0]) }
     | NUMBER { return Baba::Expr::Literal.new(val[0]) }
@@ -157,6 +136,8 @@ class BabaParser
     | TRUE { return Baba::Expr::Literal.new(true) }
     | FALSE { return Baba::Expr::Literal.new(false) }
     | BLANK { return Baba::Expr::Literal.new(nil) }
+    | BREAK { return Baba::Expr::Break.new }
+    | NEXT { return Baba::Expr::Next.new }
     | SUPER DOT IDENTIFIER { return Baba::Expr::Super.new(val[2]) }
     | LEFT_PAREN expression RIGHT_PAREN { return Baba::Expr::Grouping.new(val[1]) }
 

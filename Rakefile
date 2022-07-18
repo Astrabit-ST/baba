@@ -30,6 +30,7 @@ task :expr do
     "Block      : statements",
     "Class      : name, superclass, methods",
     "Expression : expression",
+    "For        : initializer, condition, increment, body",
     "Function   : name, params, body",
     "If         : condition, then_branch, else_branch",
     "Include    : expression",
@@ -85,4 +86,4 @@ task :lexer do
 end
 
 desc "Generate parser"
-task :generate => [:parser, :lexer]
+task :generate => [:parser, :lexer, :expr]

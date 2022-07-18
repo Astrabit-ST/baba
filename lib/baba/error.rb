@@ -1,14 +1,10 @@
 class Baba
-  def self.parser_error(token, what)
+  def self.parser_error(what)
     report(0, "'#{token}', #{what}")
   end
 
   def self.runtime_error(error)
-    if error.token.nil?
-      report(0, error.message)
-      return
-    end
-    report(error.token.line, error.message)
+    report(0, error.message)
   end
 
   def self.report(line, what, line_contents = nil, character = nil)

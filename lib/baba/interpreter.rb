@@ -191,17 +191,19 @@ class Baba
       value
     end
 
-    def visit_switch_stmt(stmt)
-      condition = evaluate(stmt.condition)
-      block = stmt.default
-      stmt.cases.each do |case_|
-        case_condition = evaluate(case_.condition)
-        if case_condition == condition
-          block = case_.body
+    def visit_for_stmt(stmt)
+      evaluate(stmt.initializer) unless stmt.initializer.nil?
+      while stmt.condition.nil? || truthy?(evaluate(stmt.condition))
+        begin
+          execute(stmt.body)
+          execute(stmt.increment) unless stmt.increment.nil?
+        rescue Break
           break
+        rescue Next
+          execute(stmt.increment) unless stmt.increment.nil?
+          next
         end
       end
-      execute(block) unless block.nil?
     end
 
     def visit_while_stmt(stmt)
@@ -218,7 +220,7 @@ class Baba
     end
 
     def visit_yield_stmt(stmt)
-      value = evaluate(stmt.value)
+      value = evaluate(stmt.value) unless stmt.value.nil?
       @yielded = true
       @yielded_value = value
 

@@ -55,7 +55,7 @@ class BabaParser < Racc::Parser
           text = @ss.peek(1)
           @lineno  +=  1  if text == "\n"
           token = case @state
-            when nil, :function, :breakable
+            when nil
           case
                   when (text = @ss.scan(/([ \t]+|\n)/))
                     ;
@@ -94,7 +94,7 @@ class BabaParser < Racc::Parser
                      action { [:LEFT_BRACE, "{"] }
 
                   when (text = @ss.scan(/\}/))
-                     action { state = previous; [:RIGHT_BRACE, "}"] }
+                     action { [:RIGHT_BRACE, "}"] }
 
                   when (text = @ss.scan(/\./))
                      action { [:DOT, "."] }
@@ -139,10 +139,10 @@ class BabaParser < Racc::Parser
                      action { [:ELSIF, "elsif"] }
 
                   when (text = @ss.scan(/does/))
-                     action { previous = state; state = :function; [:DOES, "does"] }
+                     action { [:DOES, "does"] }
 
                   when (text = @ss.scan(/for/))
-                     action { previous = state; state = :breakable; [:FOR, "for"] }
+                     action { [:FOR, "for"] }
 
                   when (text = @ss.scan(/or/))
                      action { [:OR, "or"] }
@@ -156,20 +156,20 @@ class BabaParser < Racc::Parser
                   when (text = @ss.scan(/&&/))
                      action { [:AND, "&&"] }
 
-                  when((state == :function) and (text = @ss.scan(/return/)))
+                  when (text = @ss.scan(/return/))
                      action { [:RETURN, "return"] }
 
-                  when((state == :function) and (text = @ss.scan(/super/)))
+                  when (text = @ss.scan(/super/))
                      action { [:SUPER, "super"] }
 
-                  when((state == :function) and (text = @ss.scan(/self/)))
+                  when (text = @ss.scan(/self/))
                      action { [:SELF, "self"] }
 
                   when (text = @ss.scan(/var/))
                      action { [:VAR, "var"] }
 
                   when (text = @ss.scan(/while/))
-                     action { previous = :state; state = :breakable; [:WHILE, "while"] }
+                     action { [:WHILE, "while"] }
 
                   when (text = @ss.scan(/false/))
                      action { [:FALSE, false] }
@@ -177,7 +177,7 @@ class BabaParser < Racc::Parser
                   when (text = @ss.scan(/true/))
                      action { [:TRUE, true] }
 
-                  when((state == :breakable) and (text = @ss.scan(/break/)))
+                  when (text = @ss.scan(/break/))
                      action { [:BREAK, "break"] }
 
                   when (text = @ss.scan(/switch/))
@@ -186,7 +186,7 @@ class BabaParser < Racc::Parser
                   when (text = @ss.scan(/when/))
                      action { [:WHEN, "when"] }
 
-                  when((state == :breakable) and (text = @ss.scan(/next/)))
+                  when (text = @ss.scan(/next/))
                      action { [:NEXT, "next"] }
 
                   when (text = @ss.scan(/await/))
@@ -213,5 +213,4 @@ class BabaParser < Racc::Parser
           token
         end  # def _next_token
 
-    attr_accessor :previous
 end # class

@@ -36,6 +36,18 @@ class Baba
       end
     end
 
+    class For
+      attr_reader :initializer, :condition, :increment, :body
+
+      def initialize(initializer, condition, increment, body)
+        @initializer = initializer; @condition = condition; @increment = increment; @body = body
+      end
+
+      def accept(visitor)
+        visitor.visit_for_stmt(self)
+      end
+    end
+
     class Function
       attr_reader :name, :params, :body
 

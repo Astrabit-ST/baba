@@ -10,6 +10,7 @@ class Baba
     class BreakableType
       NONE = 0
       WHILE = 1
+      FOR = 2
     end
 
     class ClassType
@@ -18,18 +19,12 @@ class Baba
       SUBCLASS = 2
     end
 
-    class SwitchType
-      NONE = 0
-      SWITCH = 1
-    end
-
     def initialize(interpreter)
       @interpreter = interpreter
       @scopes = []
       @current_function = FunctionType::NONE
       @current_breakable = BreakableType::NONE
       @current_class = ClassType::NONE
-      @current_switch = SwitchType::NONE
     end
 
     def resolve(statements)
@@ -159,24 +154,16 @@ class Baba
       resolve(stmt.expression)
     end
 
-    def visit_switch_stmt(stmt)
-      enclosing_switch = @current_switch
-      @current_switch = SwitchType::SWITCH
-      resolve(stmt.condition)
-      stmt.cases.each do |case_|
-        resolve(case_)
-      end
-      resolve(stmt.default) unless stmt.default.nil?
-      @current_switch = enclosing_switch
-    end
+    def visit_for_stmt(stmt)
+      enclosing_break = @current_breakable
+      @current_breakable = BreakableType::FOR
 
-    def visit_when_stmt(stmt)
-      if @current_switch == SwitchType::NONE
-        Baba.parser_error("Can't use 'when' outside of a switch.")
-      end
-
-      resolve(stmt.condition)
+      resolve(stmt.initializer) unless stmt.initializer.nil?
+      resolve(stmt.condition) unless stmt.condition.nil?
+      resolve(stmt.increment) unless stmt.increment.nil?
       resolve(stmt.body)
+
+      @current_breakable = enclosing_break
     end
 
     def visit_while_stmt(stmt)
@@ -190,7 +177,9 @@ class Baba
     end
 
     def visit_yield_stmt(stmt)
-      resolve(stmt.value)
+      unless stmt.value.nil?
+        resolve(stmt.value)
+      end
     end
 
     def visit_return_stmt(stmt)

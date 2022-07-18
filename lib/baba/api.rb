@@ -4,7 +4,12 @@ class Baba
   attr_accessor :execution_limit
 
   def check_running
-    raise "Baba is not running yet!" unless @interpreter
+    raise "Baba is not running yet!" unless running?
+  end
+
+  def running?
+    return false unless @interpreter
+    @interpreter.running?
   end
 
   def yielded?
