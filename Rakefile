@@ -13,7 +13,7 @@ task :expr do
     "Assign   : name, value",
     "Binary   : left, operator, right",
     "Break    : ",
-    "Call     : callee, paren, arguments",
+    "Call     : callee, arguments",
     "Get      : object, name",
     "Grouping : expression",
     "Literal  : value",

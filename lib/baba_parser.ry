@@ -8,10 +8,10 @@ class BabaParser
   rule
     program: declarations
 
-    declaration: thing_declaration { return val[0] }
-    | does_declaration { return val[0] }
-    | var_declaration { return val[0] }
-    | statement { return val[0] }
+    declaration: thing_declaration
+    | does_declaration
+    | var_declaration
+    | statement
 
     declarations: # empty
     | declaration { return val }
@@ -32,17 +32,17 @@ class BabaParser
     function: IDENTIFIER LEFT_PAREN opt_parameters RIGHT_PAREN block { return Baba::Stmt::Function.new(val[0], val[2], val[4]) }
 
     opt_parameters: # empty
-    | IDENTIFIER COMMA opt_parameters { return [val[0], val[2]].flatten }
     | IDENTIFIER { return val }
+    | IDENTIFIER COMMA opt_parameters { return [val[0], val[2]].flatten }
 
-    statement: expression { return val[0] }
-    | for_stmt { return val[0] }
-    | if_statement { return val[0] }
-    | return_statement { return val[0] }
-    | switch_statement { return val[0] }
-    | while_statement { return val[0] }
-    | yield_statement { return val[0] }
-    | block { return val[0] }
+    statement: expression
+    | for_stmt
+    | if_statement
+    | return_statement
+    | switch_statement
+    | while_statement
+    | yield_statement
+    | block
 
     for_stmt: FOR for_initializer COMMA opt_expression COMMA opt_expression statement {
       initializer = val[1]
@@ -68,8 +68,8 @@ class BabaParser
     }
 
     for_initializer: # empty
-    | var_declaration { return val[0] }
-    | expression { return val[0] }
+    | var_declaration
+    | expression
 
     if_statement: IF expression statement { return Baba::Stmt::If.new(val[1], val[2], nil) }
     | IF expression statement ELSE statement { return Baba::Stmt::If.new(val[1], val[2], val[4]) }
@@ -80,7 +80,7 @@ class BabaParser
     | ELSIF expression statement ELSE statement { return Baba::Stmt::If.new(val[1], val[2], val[4]) }
 
     return_statement: RETURN expression { return Baba::Stmt::Return.new(val[1]) }
-    | RETURN { return Baba::Stmt::Return.new( nil) }
+    | RETURN { return Baba::Stmt::Return.new(nil) }
 
     switch_statement: SWITCH expression LEFT_BRACE cases RIGHT_BRACE { return Baba::Stmt::Switch.new(val[1], val[3], nil) }
     | SWITCH expression LEFT_BRACE cases ELSE statement RIGHT_BRACE { return Baba::Stmt::Switch.new(val[1], val[3], val[5]) }
@@ -95,13 +95,61 @@ class BabaParser
 
     block: LEFT_BRACE declarations RIGHT_BRACE { return Baba::Stmt::Block.new(val[1]) }
 
-    expression: assignment { return val[0] }
-    | primary { return val[0] }
+    expression: assignment
 
     opt_expression: # empty
-    | expression { return val[0] }
+    | expression
 
-    assignment: SEMICOLON
+    assignment: IDENTIFIER EQUAL assignment { return Baba::Expr::Assign.new(val[0], val[2]) }
+    | call DOT IDENTIFIER EQUAL assignment { return Baba::Expr::Set.new(val[0], val[2], val[4]) }
+    | logic_or
+
+    logic_or: logic_and
+    | logic_and OR logic_or { return Baba::Expr::Logical.new(val[0], val[1], val[2]) }
+
+    logic_and: equality
+    | equality AND logic_and { return Baba::Expr::Logical.new(val[0], val[1], val[2]) }
+
+    equality: comparison
+    | comparison opt_equality equality { return Baba::Expr::Binary.new(val[0], val[1], val[2]) }
+
+    opt_equality: EQUAL_EQUAL
+    | NOT_EQUAL
+
+    comparison: term
+    | term opt_comparison comparison { return Baba::Expr::Binary.new(val[0], val[1], val[2]) }
+
+    opt_comparison: GREATER_EQUAL
+    | LESS_EQUAL
+    | GREATER
+    | LESS
+
+    term: factor
+    | factor opt_term term { return Baba::Expr::Binary.new(val[0], val[1], val[2]) }
+
+    opt_term: MINUS
+    | PLUS
+
+    factor: unary
+    | unary opt_factor factor { return Baba::Expr::Binary.new(val[0], val[1], val[2]) }
+
+    opt_factor: SLASH
+    | STAR
+    | MODULO
+
+    unary: opt_unary unary { return Baba::Expr::Unary.new(val[0], val[1]) }
+    | call
+
+    opt_unary: MINUS
+    | NOT
+
+    call: primary
+    | call LEFT_PAREN opt_arguments RIGHT_PAREN { return Baba::Expr::Call.new(val[0], val[2]) }
+    | call DOT IDENTIFIER { return Baba::Expr::Get.new(val[0], val[2]) }
+
+    opt_arguments: # empty
+    | expression { return val }
+    | expression COMMA opt_parameters { return [val[0], val[2]].flatten }
 
     primary: IDENTIFIER { return Baba::Expr::Variable.new(val[0]) }
     | NUMBER { return Baba::Expr::Literal.new(val[0]) }

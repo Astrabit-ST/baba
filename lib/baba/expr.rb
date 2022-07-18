@@ -37,10 +37,10 @@ class Baba
     end
 
     class Call
-      attr_reader :callee, :paren, :arguments
+      attr_reader :callee, :arguments
 
-      def initialize(callee, paren, arguments)
-        @callee = callee; @paren = paren; @arguments = arguments
+      def initialize(callee, arguments)
+        @callee = callee; @arguments = arguments
       end
 
       def accept(visitor)
