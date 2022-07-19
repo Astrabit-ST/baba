@@ -16,34 +16,34 @@ class Baba
           @object
         end
 
-      if name.lexeme == "new"
-        method = @klass.method(name.lexeme)
+      if name == "new"
+        method = @klass.method(name)
         return RubyFunction.new(method, proc do |ret|
                  @object = ret
                  @methods = ret.methods.map { |m| m.to_s }
                end)
       end
 
-      if name.lexeme == "array_get" # This is not the best idea but it works
+      if name == "array_get" # This is not the best idea but it works
         if @methods.include?("[]")
           method = klass.method("[]")
           return RubyFunction.new(method)
         end
       end
 
-      if name.lexeme == "array_set"
+      if name == "array_set"
         if @methods.include?("[]=")
           method = klass.method("[]=")
           return RubyFunction.new(method)
         end
       end
 
-      if @methods.include?(name.lexeme)
-        method = klass.method(name.lexeme)
+      if @methods.include?(name)
+        method = klass.method(name)
         return RubyFunction.new(method)
       end
 
-      raise BabaRuntimeError.new(name, "Undefined method #{name.lexeme} for #{@klass}.")
+      raise BabaRuntimeError.new(name, "Undefined method #{name} for #{@klass}.")
     end
 
     def []=(name, value)
@@ -54,7 +54,7 @@ class Baba
         end
 
       if @methods.include?[name.lexme + "="]
-        method = klass.method(name.lexeme + "=")
+        method = klass.method(name + "=")
         method.call(value)
       else
         raise BabaRuntimeError.new(name, "Undefined method #{name.lexme}= for #{@klass}.")

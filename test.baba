@@ -1,0 +1,15 @@
+thing MyThing {
+    does test(args) {
+        yield args
+    }
+
+    does test2() {
+        yield self.prop
+    }
+}
+
+var myThing = MyThing()
+yield myThing
+myThing.test("a")
+myThing.prop = "bcdef"
+myThing.test2()

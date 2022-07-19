@@ -2,7 +2,7 @@ class BabaParser
 macro
     DIGIT   [0-9]
     ALPHA   ([a-z]|_)\w*
-    BLANK   ([\ \t]+|\n)
+    BLANK   ([\ \t]+|\n|\r\n)
     CONSTANT ([A-Z])\w*
 
 rule

@@ -57,7 +57,7 @@ class BabaParser < Racc::Parser
           token = case @state
             when nil
           case
-                  when (text = @ss.scan(/([ \t]+|\n)/))
+                  when (text = @ss.scan(/([ \t]+|\n|\r\n)/))
                     ;
 
                   when (text = @ss.scan(/[0-9]+(\.[0-9]+)?/))

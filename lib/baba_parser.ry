@@ -138,6 +138,8 @@ class BabaParser
     | BLANK { return Baba::Expr::Literal.new(nil) }
     | BREAK { return Baba::Expr::Break.new }
     | NEXT { return Baba::Expr::Next.new }
+    | SELF { return Baba::Expr::Self.new }
+    | CONSTANT { return Baba::Expr::Variable.new(val[0]) }
     | SUPER DOT IDENTIFIER { return Baba::Expr::Super.new(val[2]) }
     | LEFT_PAREN expression RIGHT_PAREN { return Baba::Expr::Grouping.new(val[1]) }
 

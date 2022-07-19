@@ -20,11 +20,11 @@ class Baba
     def call(interpreter, arguments)
       environment = Environment.new(@closure)
       @declaration.params.each_with_index do |p, i|
-        environment.define(p.lexeme, arguments[i])
+        environment.define(p, arguments[i])
       end
 
       begin
-        interpreter.execute_block(@declaration.body, environment)
+        interpreter.execute_block(@declaration.body.statements, environment)
       rescue Return => value
         return value.value
       end
@@ -36,7 +36,7 @@ class Baba
     end
 
     def to_s
-      "<fn: #{@declaration.name.lexeme}>"
+      "<fn: #{@declaration.name}>"
     end
   end
 end

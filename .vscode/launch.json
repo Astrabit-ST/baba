@@ -17,7 +17,7 @@
             "type": "rdbg",
             "name": "Debug with rdbg",
             "request": "launch",
-            "script": "${workspaceFolder}/spec/embed_test.rb",
+            "script": "${workspaceFolder}/test.rb",
             "args": [],
             "askParameters": false,
             "debugPort": "12345",
