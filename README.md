@@ -24,16 +24,18 @@ You can also create classes and methods in a "ruby extension" and load them in b
 
 # Todo
 
-- [ ] Ruby API
+- [x] Ruby API
 - [x] Yield
 - [x] Resume & Pause & Autoyield
 - [x] Switch statement
 - [x] Next
+- [x] Move to rexical and racc
+- [ ] Rewrite interpreter and code in general to be better
 - [ ] Default Object superclass
 - [ ] Splat args
 - [ ] Default args
 - [ ] rb_call
-- [ ] Move to rexical and racc
+- [ ] Better error handling
 - [ ] Lists
 - [ ] String class
 - [ ] Number class
@@ -44,4 +46,3 @@ You can also create classes and methods in a "ruby extension" and load them in b
 - [ ] Basic standard library (IO, Time, etc)
 - [ ] Better include statement
 - [ ] Include ruby files
-- [ ] Better error handling
