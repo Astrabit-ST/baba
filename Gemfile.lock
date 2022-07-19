@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    baba (2.0.0)
+    baba (2.6.0)
 
 GEM
   remote: https://rubygems.org/
@@ -13,11 +13,13 @@ GEM
     parser (3.1.1.0)
       ast (~> 2.4.1)
     prettier_print (0.1.0)
+    racc (1.6.0)
     rainbow (3.1.1)
     rake (13.0.6)
     regexp_parser (2.2.1)
     reline (0.3.1)
       io-console (~> 0.5)
+    rexical (1.0.7)
     rexml (3.2.5)
     rubocop (1.26.1)
       parallel (~> 1.10)
@@ -46,8 +48,10 @@ PLATFORMS
 
 DEPENDENCIES
   baba!
+  racc (~> 1.6.0)
   rake (~> 13.0)
   reline (~> 0.3.1)
+  rexical (~> 1.0.7)
   rubocop (~> 1.21)
   ruby-lsp (~> 0.2.0)
 
