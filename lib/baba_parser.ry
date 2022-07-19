@@ -3,7 +3,7 @@ class BabaParser
   token NOT NOT_EQUAL EQUAL EQUAL_EQUAL GREATER LESS GREATER_EQUAL LESS_EQUAL
   token IDENTIFIER STRING NUMBER CONSTANT
   token THING IF ELSE DOES FOR BLANK OR AND RETURN SUPER SELF VAR WHILE FALSE TRUE RIGHT_BRACE BREAK SWITCH WHEN NEXT
-  token AWAIT YIELD ELSIF
+  token AWAIT YIELD ELSIF INCLUDE
 
   rule
     program: declarations
@@ -38,6 +38,7 @@ class BabaParser
     statement: expression
     | for_stmt
     | if_statement
+    | include_statement
     | return_statement
     | switch_statement
     | while_statement
@@ -57,6 +58,8 @@ class BabaParser
     elsif_statement: ELSIF expression statement elsif_statement { return Baba::Stmt::If.new(val[1], val[2], val[3]) }
     | ELSIF expression statement { return Baba::Stmt::If.new(val[1], val[2], nil) }
     | ELSIF expression statement ELSE statement { return Baba::Stmt::If.new(val[1], val[2], val[4]) }
+
+    include_statement: INCLUDE STRING { return Baba::Stmt::Include.new(val[1]) }
 
     return_statement: RETURN expression { return Baba::Stmt::Return.new(val[1]) }
     | RETURN { return Baba::Stmt::Return.new(nil) }
@@ -149,3 +152,14 @@ end
 require_relative 'stmt'
 require_relative 'expr'
 require_relative 'lexer'
+
+----inner
+def on_error(error_token_id, error_value, value_stack)
+  token = token_to_str(error_token_id)
+  string = @ss.string
+  line = string.split("\n")[@lineno]
+  puts "| Syntax error at #{token} '#{error_value}': line #{@lineno + 1}"
+  puts "| #{line}"
+  puts "| #{ '~' * line.index(error_value) }#{'^' * error_value.length} HERE"
+  raise ParseError.new
+end

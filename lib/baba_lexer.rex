@@ -55,6 +55,7 @@ rule
                 next                          { [:NEXT, "next"] }
                 await                         { [:AWAIT, "await"] }
                 yield                         { [:YIELD, "yield"] }
+                include                       { [:INCLUDE, "include"] }
                 {CONSTANT}                    { [:CONSTANT, text] }
                 {ALPHA}({ALPHA}|{DIGIT})*     { [:IDENTIFIER, text] }
 end

@@ -26,10 +26,4 @@ class Baba
     check_running
     @interpreter.resume
   end
-
-  def reset
-    @interpreter = Interpreter.new
-    @interpreter.execution_limit = @execution_limit
-    @parser = BabaParser.new
-  end
 end

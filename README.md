@@ -12,6 +12,8 @@ It's also possible to optionally specify an execution limit with `Baba.execution
 
 Multiple baba interpreters can be created and run at once too!
 
+Baba may optionally compile down to a bytecode that can then be run at runtime.
+
 # Ruby API
 
 From baba, it is possible to interop with ruby classes via the `RubyObject` class. You can pass in a classname to "get" the class, then call `new` on it to actually instantiate the class.

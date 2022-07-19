@@ -2,11 +2,17 @@
 
 require_relative "baba/version"
 require_relative "baba/interpreter"
+require_relative "baba/resolver"
 require_relative "baba"
 require_relative "baba/api"
 
 class Baba
   @@had_error = false
+
+  def initialize
+    @interpreter = Interpreter.new
+    @parser = BabaParser.new
+  end
 
   def main
     case ARGV.length
@@ -42,11 +48,13 @@ class Baba
   end
 
   def run(source)
-    reset
+    @interpreter.execution_limit = @execution_limit
 
-    statements = @parser.scan_str(source)
-
-    return if @@had_error
+    begin
+      statements = @parser.scan_str(source)
+    rescue Racc::ParseError
+      return
+    end
 
     resolver = Resolver.new(@interpreter)
     resolver.resolve(statements)

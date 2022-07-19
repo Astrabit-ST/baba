@@ -195,6 +195,9 @@ class BabaParser < Racc::Parser
                   when (text = @ss.scan(/yield/))
                      action { [:YIELD, "yield"] }
 
+                  when (text = @ss.scan(/include/))
+                     action { [:INCLUDE, "include"] }
+
                   when (text = @ss.scan(/([A-Z])\w*/))
                      action { [:CONSTANT, text] }
 
