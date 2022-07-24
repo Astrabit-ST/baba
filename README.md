@@ -32,19 +32,17 @@ You can also create classes and methods in a "ruby extension" and load them in b
 - [x] Switch statement
 - [x] Next
 - [x] Move to rexical and racc
-- [ ] Rewrite interpreter and code in general to be better
+- [x] Rewrite interpreter and code in general to be better
+- [ ] Basic standard library (IO, Time, etc)
+- [ ] Better include statement
+- [ ] Include ruby files
 - [ ] Default Object superclass
+- [ ] Lists
+- [ ] Everything is an object:tm:
 - [ ] Splat args
 - [ ] Default args
 - [ ] rb_call
 - [ ] Better error handling
-- [ ] Lists
-- [ ] String class
-- [ ] Number class
-- [ ] Bool class
-- [ ] Mathematical operator functions
+- [ ] Operator overloading
 - [ ] +=, \*= etc...
 - [ ] Metaclasses
-- [ ] Basic standard library (IO, Time, etc)
-- [ ] Better include statement
-- [ ] Include ruby files
