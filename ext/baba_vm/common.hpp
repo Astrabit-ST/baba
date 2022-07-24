@@ -1,7 +1,6 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <ruby.h>
 #include <vector>
 #include <cstdint>
 #include <iostream>

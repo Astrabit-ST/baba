@@ -12,3 +12,7 @@
 .gdb_history
 lib/baba/baba_vm.so
 log.txt
+parser.cpp
+parser.hpp
+lexer.cpp
+lexer.hpp

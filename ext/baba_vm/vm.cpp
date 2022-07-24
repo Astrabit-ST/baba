@@ -1,11 +1,9 @@
 #include "vm.hpp"
-#include "compiler.hpp"
 #include "debug.hpp"
 #include <cmath>
 
 InterpretResult VM::interpret(const char *source)
 {
-    compile(source);
     return OK;
 }
 

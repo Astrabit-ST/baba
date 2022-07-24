@@ -22,16 +22,23 @@ unless flex_exe = find_executable("flex")
     system("pacman -S flex --noconfirm")
     abort "Failed to install flex" unless flex_exe = find_executable("flex")
   else
-    raise "flex not found, please install flex"
+    raise "flex not found, please install flex" # flex is standard on linux
   end
 end
 find_header("FlexLexer.h")
 find_library("fl", nil)
 
-puts "Generating lexer.cpp"
-File.open(File.join(__dir__, "lexer.cpp"), "w") do |f|
-  f.write `#{flex_exe} -t #{__dir__}/lexer.l`
+unless bison_exe = find_executable("bison")
+  abort "bison not found, please install bison" # bison is standard with msys2 and most linux distros
 end
+
+prev_dir = Dir.pwd
+Dir.chdir(__dir__)
+puts "Generating lexer"
+`flex lexer.l`
+puts "Generating parser"
+`bison -d parser.y`
+Dir.chdir(prev_dir)
 
 create_header
 create_makefile "baba_vm"

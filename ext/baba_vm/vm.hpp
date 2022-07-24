@@ -13,6 +13,7 @@ enum InterpretResult
 
 struct VM
 {
+public:
     InterpretResult interpret(const char *source);
     InterpretResult run();
     void push_stack(BabaValue value);
