@@ -17,7 +17,13 @@ usr_dir = if Gem.win_platform? #* Treat windows like a special needs child
 
 dir_config("flex", usr_dir)
 unless flex_exe = find_executable("flex")
-  abort "flex not found"
+  if Gem.win_platform?
+    puts "flex not found, attempting to install..."
+    system("pacman -S flex --noconfirm")
+    abort "Failed to install flex" unless flex_exe = find_executable("flex")
+  else
+    raise "flex not found, please install flex"
+  end
 end
 find_header("FlexLexer.h")
 find_library("fl", nil)
