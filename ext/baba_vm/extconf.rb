@@ -2,7 +2,10 @@ require "mkmf"
 include MakeMakefile["C++"]
 require "rubygems"
 
-if with_config("debug")
+debug = with_config("debug")
+debug = true
+
+if debug
   $LDFLAGS.sub!(/\-s /, "") # Strip -s for the linker
   $DLDFLAGS.sub!(/\-s /, "") # Strip -s for the linker
   $CFLAGS.sub!(/-O\d/, "") # Strip -O3 for the compiler
@@ -39,10 +42,10 @@ Dir.chdir(__dir__)
 puts "Generating lexer"
 `flex lexer.l`
 puts "Generating parser"
-if with_config("debug")
+if debug
   `bison -d -Wcounterexamples parser.y`
 else
-  `bison -d parser.y`
+  `bison -d -Wcex parser.y`
 end
 Dir.chdir(prev_dir)
 

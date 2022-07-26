@@ -19,8 +19,8 @@ STRING  "([^"]|\\")*"
 %%
 
 {BLANK} /* ignore blanks */
-{DIGIT}+(.{DIGIT}+)? { yylval->emplace<double>(std::stod(yytext)); return Parser::token::tNUMBER; }
 {STRING} { yylval->emplace<std::string>(std::string(yytext)); return Parser::token::tSTRING; }
+"#".*\n /* ignore comments */
 "(" { return Parser::token::tLEFT_PAREN; }
 ")" { return Parser::token::tRIGHT_PAREN; }
 "," { return Parser::token::tCOMMA; }
@@ -65,6 +65,7 @@ STRING  "([^"]|\\")*"
 "await" { return Parser::token::kAWAIT; }
 "yield" { return Parser::token::kYIELD; }
 "include" { return Parser::token::kINCLUDE; }
+{DIGIT}+(.{DIGIT}+)? { yylval->emplace<double>(std::stod(yytext)); return Parser::token::tNUMBER; }
 {CONSTANT}({ALPHA}|{DIGIT})* { yylval->emplace<std::string>(std::string(yytext)); return Parser::token::tCONSTANT; }
 {ALPHA}({ALPHA}|{DIGIT})* { yylval->emplace<std::string>(std::string(yytext)); return Parser::token::tIDENTIFIER; }
 .  /* unknown character */
