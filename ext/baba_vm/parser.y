@@ -8,7 +8,7 @@
 %language "c++"
 %defines "parser.hpp"
 %output "parser.cpp"
-%require "3.8"
+%require "3.5"
 %define api.parser.class {Parser}
 %define api.value.type variant
 %param {yyscan_t scanner}
@@ -16,7 +16,7 @@
 %code provides
 {
     #define YY_DECL \
-        int yylex(yy::Parser::value_type *yylval, yyscan_t yyscanner)
+        int yylex(yy::Parser::semantic_type *yylval, yyscan_t yyscanner)
     YY_DECL;
 }
 
@@ -77,9 +77,6 @@ kYIELD "yield"
 %left tPLUS tMINUS
 %left tSTAR tSLASH tMODULO
 
-%nterm <double> primary
-%nterm <double> binary
-
 %%
 program: declarations
 ;
@@ -94,16 +91,15 @@ declaration: expression
 expression: binary
 ;
 
-binary: primary { $$ = $1; }
-| binary tPLUS binary { std::cout << $1 << " + " << $3; $$ = $3; }
-| binary tMINUS binary { std::cout << $1 << " - " << $3; $$ = $3; }
-| binary tSLASH binary { std::cout << $1 << " / " << $3; $$ = $3; }
-| binary tSTAR binary { std::cout << $1 << " * " << $3; $$ = $3; }
-| binary tMODULO binary { std::cout << $1 << " % " << $3; $$ = $3; }
+binary: primary
+| binary tPLUS binary
+| binary tMINUS binary
+| binary tSLASH binary
+| binary tSTAR binary
+| binary tMODULO binary
 ;
 
-primary: tNUMBER { $$ = $1; }
-/*
+primary: tNUMBER
 | kTRUE
 | kFALSE
 | kBLANK
@@ -112,7 +108,6 @@ primary: tNUMBER { $$ = $1; }
 | kSELF
 | kSUPER tDOT tIDENTIFIER
 | tLEFT_PAREN expression tRIGHT_PAREN
-*/
 ;
 %%
 
