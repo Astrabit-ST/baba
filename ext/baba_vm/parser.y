@@ -1,6 +1,8 @@
 %{
     #include "lexer.hpp"
     #include <string>
+    #include <iostream>
+    #include <cmath>
 %}
 
 %language "c++"
@@ -72,8 +74,45 @@ kYIELD "yield"
 %token <bool> kTRUE "true"
 %token kBLANK "blank"
 
+%left tPLUS tMINUS
+%left tSTAR tSLASH tMODULO
+
+%nterm <double> primary
+%nterm <double> binary
+
 %%
-lines   : %empty
+program: declarations
+;
+
+declarations: /* nothing */
+| declaration declarations
+;
+
+declaration: expression
+;
+
+expression: binary
+;
+
+binary: primary { $$ = $1; }
+| binary tPLUS binary { std::cout << $1 << " + " << $3; $$ = $3; }
+| binary tMINUS binary { std::cout << $1 << " - " << $3; $$ = $3; }
+| binary tSLASH binary { std::cout << $1 << " / " << $3; $$ = $3; }
+| binary tSTAR binary { std::cout << $1 << " * " << $3; $$ = $3; }
+| binary tMODULO binary { std::cout << $1 << " % " << $3; $$ = $3; }
+;
+
+primary: tNUMBER { $$ = $1; }
+/*
+| kTRUE
+| kFALSE
+| kBLANK
+| tIDENTIFIER
+| tCONSTANT
+| kSELF
+| kSUPER tDOT tIDENTIFIER
+| tLEFT_PAREN expression tRIGHT_PAREN
+*/
 ;
 %%
 
