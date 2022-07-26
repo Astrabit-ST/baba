@@ -14,7 +14,7 @@ enum InterpretResult
 struct VM
 {
 public:
-    InterpretResult interpret(const char *source);
+    InterpretResult interpret(Chunk *chunk);
     InterpretResult run();
     void push_stack(BabaValue value);
     BabaValue pop_stack();

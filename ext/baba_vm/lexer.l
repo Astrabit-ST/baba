@@ -1,5 +1,6 @@
 %{
     #include "parser.hpp"
+    using namespace yy;
 %}
 
 DIGIT   [0-9]
@@ -18,8 +19,8 @@ STRING  "([^"]|\\")*"
 %%
 
 {BLANK} /* ignore blanks */
-{DIGIT}+(.{DIGIT}+)?
-{STRING}
+{DIGIT}+(.{DIGIT}+)? { yylval->emplace<double>(std::stod(yytext)); return Parser::token::tNUMBER; }
+{STRING} { yylval->emplace<std::string>(std::string(yytext)); return Parser::token::tSTRING; }
 "("
 ")"
 ","
@@ -64,8 +65,8 @@ STRING  "([^"]|\\")*"
 "await"
 "yield"
 "include"
-{CONSTANT}({ALPHA}|{DIGIT})*
-{ALPHA}({ALPHA}|{DIGIT})*
+{CONSTANT}({ALPHA}|{DIGIT})* { yylval->emplace<std::string>(std::string(yytext)); return Parser::token::tCONSTANT; }
+{ALPHA}({ALPHA}|{DIGIT})* { yylval->emplace<std::string>(std::string(yytext)); return Parser::token::tIDENTIFIER; }
 .  /* unknown character */
 
 %%

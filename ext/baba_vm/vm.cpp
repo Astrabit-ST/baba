@@ -2,9 +2,11 @@
 #include "debug.hpp"
 #include <cmath>
 
-InterpretResult VM::interpret(const char *source)
+InterpretResult VM::interpret(Chunk *chunk)
 {
-    return OK;
+    this->chunk = chunk;
+    instruction_pointer = chunk->code.data();
+    return run();
 }
 
 #define READ_BYTE *(instruction_pointer++)
