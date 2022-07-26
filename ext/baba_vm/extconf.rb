@@ -39,7 +39,11 @@ Dir.chdir(__dir__)
 puts "Generating lexer"
 `flex lexer.l`
 puts "Generating parser"
-`bison -d parser.y`
+if with_config("debug")
+  `bison -d -Wcounterexamples parser.y`
+else
+  `bison -d parser.y`
+end
 Dir.chdir(prev_dir)
 
 create_header
