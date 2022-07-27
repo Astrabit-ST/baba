@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "lib/baba/version"
-
 Gem::Specification.new do |spec|
   spec.name = "baba"
-  spec.version = Baba::VERSION
+  spec.version = "2.6.0"
   spec.authors = ["Matthew Lyons"]
   spec.email = ["matthew@nowaffles.com"]
 

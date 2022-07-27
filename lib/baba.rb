@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "baba/version"
 require_relative "baba/baba_vm"
 
 class Baba
@@ -27,7 +26,7 @@ class Baba
   require "readline"
 
   def run_interactive
-    prompt = "irbaba (#{VERSION}) > "
+    prompt = "irbaba (#{"2.6.0"}) > "
     use_history = true
     while buf = Readline.readline(prompt, use_history)
       break if buf == "exit"

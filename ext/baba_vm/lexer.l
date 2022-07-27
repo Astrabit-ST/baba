@@ -5,13 +5,15 @@
 
 DIGIT   [0-9]
 ALPHA   [a-z_]\w*
-BLANK   ([\ \t]+|\n|\r\n)
+BLANK   [\ \t]+
+NEWLINE (\n|\r\n)
 CONSTANT ([A-Z])
 STRING  "([^"]|\\")*"
 
 %option noyywrap
 %option full
 %option reentrant
+%option yylineno
 /* %option bison-bridge */
 %option outfile="lexer.cpp"
 %option header="lexer.hpp"
@@ -19,6 +21,7 @@ STRING  "([^"]|\\")*"
 %%
 
 {BLANK} /* ignore blanks */
+{NEWLINE} /* ignore newlines */
 {STRING} { yylval->emplace<std::string>(std::string(yytext)); return Parser::token::tSTRING; }
 "#".*\n /* ignore comments */
 "(" { return Parser::token::tLEFT_PAREN; }

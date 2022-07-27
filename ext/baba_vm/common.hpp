@@ -8,6 +8,8 @@
 
 typedef double BabaValue;
 
+const short VERSION = 260; //* 2.6.0
+
 struct Chunk
 {
 public:

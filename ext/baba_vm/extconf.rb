@@ -3,7 +3,9 @@ include MakeMakefile["C++"]
 require "rubygems"
 
 debug = with_config("debug")
-debug = true
+flex_debug = with_config("flex-debug") || debug
+bison_debug = with_config("bison-debug") || debug
+# flex_debug = true
 
 if debug
   $LDFLAGS.sub!(/\-s /, "") # Strip -s for the linker
@@ -40,12 +42,16 @@ end
 prev_dir = Dir.pwd
 Dir.chdir(__dir__)
 puts "Generating lexer"
-`flex lexer.l`
-puts "Generating parser"
-if debug
-  `bison -d -Wcounterexamples parser.y`
+if flex_debug
+  `flex -p lexer.l`
 else
-  `bison -d -Wcex parser.y`
+  `flex lexer.l`
+end
+puts "Generating parser"
+if bison_debug
+  `bison -d -Wcex -Wcounterexamples parser.y`
+else
+  `bison -d parser.y`
 end
 Dir.chdir(prev_dir)
 
