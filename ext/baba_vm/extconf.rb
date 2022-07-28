@@ -5,7 +5,7 @@ require "rubygems"
 debug = with_config("debug")
 flex_debug = with_config("flex-debug") || debug
 bison_debug = with_config("bison-debug") || debug
-# flex_debug = true
+debug = true
 
 if debug
   $LDFLAGS.sub!(/\-s /, "") # Strip -s for the linker
@@ -43,13 +43,13 @@ prev_dir = Dir.pwd
 Dir.chdir(__dir__)
 puts "Generating lexer"
 if flex_debug
-  `flex -p lexer.l`
+  `flex -p -d lexer.l`
 else
   `flex lexer.l`
 end
 puts "Generating parser"
 if bison_debug
-  `bison -d -Wcex -Wcounterexamples parser.y`
+  `bison -d -t -Wcex -Wcounterexamples parser.y`
 else
   `bison -d parser.y`
 end

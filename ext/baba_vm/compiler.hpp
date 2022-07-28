@@ -6,12 +6,7 @@
 
 struct Compiler
 {
-    Compiler();
-    ~Compiler();
     bool compile(const char *source, Chunk *chunk);
-
-    yyscan_t scanner;
-    yy::Parser *parser;
 };
 
 #endif
