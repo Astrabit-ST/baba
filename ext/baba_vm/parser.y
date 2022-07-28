@@ -21,6 +21,7 @@
 %require "3.5"
 %define api.parser.class {Parser}
 %define api.value.type variant
+%define parse.trace true
 %param {yyscan_t scanner}
 %parse-param {Node* root}
 
@@ -91,7 +92,7 @@ kYIELD "yield"
 %type <std::vector<std::string>> parameters
 
 %%
-program: declarations {  Program($1); } /* ... */
+program: declarations { *root = Program($1); } /* ... */
 ;
 
 declaration: thing_declaration /* thing ... */
@@ -176,7 +177,7 @@ cases: kWHEN expression statement { $$ = std::vector<Node>({When($2, $3)}); } /*
 | kWHEN expression statement cases { $4.insert($4.begin(), When($2, $3)); $$ = $4; } /* when ... when ... */
 ;
 
-while_statement: kWHILE expression statement { $$ = WhileN($2, $3); } /* while ... */
+while_statement: kWHILE expression statement { $$ = While($2, $3); } /* while ... */
 ;
 
 yield_statement: kYIELD opt_expression { $$ = YieldN($2); } /* yield ... */

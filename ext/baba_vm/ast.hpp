@@ -20,6 +20,7 @@ struct MissingNode : Node
 struct Program : Node
 {
     Program(std::vector<Node> declarations) : declarations(declarations) {}
+    void print();
 
     std::vector<Node> declarations;
 };
@@ -31,6 +32,7 @@ struct Thing : Node
 {
     Thing(std::string name, std::string superclass, std::vector<Node> methods)
         : name(name), superclass(superclass), methods(methods) {}
+    void print();
 
     std::string name;
     std::string superclass;
@@ -42,6 +44,7 @@ struct Function : Node
 {
     Function(std::string name, std::vector<std::string> params, Node body)
         : name(name), params(params), body(body) {}
+    void print();
 
     std::string name;
     std::vector<std::string> params;
@@ -53,6 +56,7 @@ struct Var : Node
 {
     Var(std::string name, Node initializer)
         : name(name), initializer(initializer) {}
+    void print();
 
     std::string name;
     Node initializer;
@@ -63,6 +67,7 @@ struct For : Node
 {
     For(Node initializer, Node condition, Node increment, Node body)
         : initializer(initializer), condition(condition), increment(increment), body(body) {}
+    void print();
 
     Node initializer;
     Node condition;
@@ -75,6 +80,7 @@ struct If : Node
 {
     If(Node condition, Node then_branch, Node else_branch)
         : condition(condition), then_branch(then_branch), else_branch(else_branch) {}
+    void print();
 
     Node condition;
     Node then_branch;
@@ -85,6 +91,7 @@ struct If : Node
 struct Include : Node
 {
     Include(Node file) : file(file) {}
+    void print();
 
     Node file;
 };
@@ -93,6 +100,7 @@ struct Include : Node
 struct Return : Node
 {
     Return(Node value) : value(value) {}
+    void print();
 
     Node value;
 };
@@ -102,6 +110,7 @@ struct Switch : Node
 {
     Switch(Node condition, std::vector<Node> cases, Node default_)
         : condition(condition), cases(cases), default_(default_) {}
+    void print();
 
     Node condition;
     std::vector<Node> cases;
@@ -112,16 +121,18 @@ struct Switch : Node
 struct When : Node
 {
     When(Node condition, Node body) : condition(condition), body(body) {}
+    void print();
 
     Node condition;
     Node body;
 };
 
 // * While
-struct WhileN : Node
+struct While : Node
 {
-    WhileN(Node condition, Node body)
+    While(Node condition, Node body)
         : condition(condition), body(body) {}
+    void print();
 
     Node condition;
     Node body;
@@ -131,6 +142,7 @@ struct WhileN : Node
 struct YieldN : Node //! Yield is a fucking macro on windows
 {
     YieldN(Node value) : value(value) {}
+    void print();
 
     Node value;
 };
@@ -139,6 +151,7 @@ struct YieldN : Node //! Yield is a fucking macro on windows
 struct Block : public Node
 {
     Block(std::vector<Node> statements) : statements(statements) {}
+    void print();
 
     std::vector<Node> statements;
 };
@@ -150,6 +163,7 @@ struct Assign : Node
 {
     Assign(std::string name, Node value)
         : name(name), value(value) {}
+    void print();
 
     std::string name;
     Node value;
@@ -159,6 +173,7 @@ struct Set : Node
 {
     Set(Node object, std::string name, Node value)
         : object(object), name(name), value(value) {}
+    void print();
 
     Node object;
     std::string name;
@@ -170,6 +185,7 @@ struct Logical : Node
 {
     Logical(Node left, std::string _operator, Node right)
         : left(left), _operator(_operator), right(right) {}
+    void print();
 
     Node left;
     std::string _operator;
@@ -181,6 +197,7 @@ struct Binary : Node
 {
     Binary(Node left, std::string _operator, Node right)
         : left(left), _operator(_operator), right(right) {}
+    void print();
 
     Node left;
     std::string _operator;
@@ -192,6 +209,7 @@ struct Unary : Node
 {
     Unary(std::string _operator, Node right)
         : _operator(_operator), right(right) {}
+    void print();
 
     std::string _operator;
     Node right;
@@ -202,6 +220,7 @@ struct Call : Node
 {
     Call(Node callee, std::vector<Node> arguments)
         : callee(callee), arguments(arguments) {}
+    void print();
 
     Node callee;
     std::vector<Node> arguments;
@@ -211,38 +230,32 @@ struct Get : Node
 {
     Get(Node object, std::string name)
         : object(object), name(name) {}
+    void print();
 
     Node object;
     std::string name;
 };
 
 // * Primary
-template <typename T>
-struct Literal : Node
-{
-    void compile(Chunk *chunk);
-    void print();
-
-    Literal(T t) : val(t) {}
-
-    T val;
-};
-
 struct Break : Node
 {
+    void print();
 };
 
 struct Next : Node
 {
+    void print();
 };
 
 struct Self : Node
 {
+    void print();
 };
 
 struct Variable : Node
 {
     Variable(std::string name) : name(name) {}
+    void print();
 
     std::string name;
 };
@@ -250,6 +263,7 @@ struct Variable : Node
 struct Super : Node
 {
     Super(std::string member) : member(member) {}
+    void print();
 
     std::string member;
 };
@@ -257,11 +271,24 @@ struct Super : Node
 struct Grouping : Node
 {
     Grouping(Node expression) : expression(expression) {}
+    void print();
 
     Node expression;
 };
 
-// Seperate files for template implementations
-#include "compiler.tcc"    // void compile(Chunk* chunk) implementations
-#include "ast_printer.tcc" // void print() implementations
+// * Literal gets special treatment because templates :)
+
+template <typename T>
+struct Literal : Node
+{
+    void compile(Chunk *chunk){};
+    void print()
+    {
+        std::cout << val;
+    }
+
+    Literal(T t) : val(t) {}
+
+    T val;
+};
 #endif

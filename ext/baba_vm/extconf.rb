@@ -1,11 +1,12 @@
 require "mkmf"
 include MakeMakefile["C++"]
 require "rubygems"
+require "fileutils"
 
 debug = with_config("debug")
+debug = true
 flex_debug = with_config("flex-debug") || debug
 bison_debug = with_config("bison-debug") || debug
-debug = true
 
 if debug
   $LDFLAGS.sub!(/\-s /, "") # Strip -s for the linker
@@ -49,10 +50,12 @@ else
 end
 puts "Generating parser"
 if bison_debug
-  `bison -d -t -Wcex -Wcounterexamples parser.y`
+  `bison -d parser.y` # -Wcex -Wcounterexamples parser.y`
 else
   `bison -d parser.y`
 end
+# gdb gets confused about file paths, so we copy the files to where it expects them to be
+FileUtils.cp(%w[lexer.cpp parser.cpp lexer.hpp parser.hpp], prev_dir)
 Dir.chdir(prev_dir)
 
 create_header
