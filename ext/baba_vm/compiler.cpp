@@ -3,11 +3,11 @@
 
 bool Compiler::compile(const char *source, Chunk *chunk)
 {
-    Node root_node;
+    NodePtr root_node;
 
     yyscan_t scanner;
     yylex_init(&scanner);
-    yy::Parser parser(scanner, &root_node);
+    yy::Parser parser(scanner, root_node);
     // parser.set_debug_level(1);
 
     yy_scan_string(source, scanner);

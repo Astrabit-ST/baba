@@ -4,7 +4,7 @@ require "rubygems"
 require "fileutils"
 
 debug = with_config("debug")
-debug = true
+debug = false
 flex_debug = with_config("flex-debug") || debug
 bison_debug = with_config("bison-debug") || debug
 

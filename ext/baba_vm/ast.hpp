@@ -4,12 +4,19 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <memory>
 
 struct Node
 {
     virtual void compile(Chunk *chunk) {}
     virtual void print() {}
 };
+
+//? We use shared_ptr to avoid dealing with memory management
+//? Otherwise, we'd have to manually manage memory for each node, and that's a pain in the ass
+//? shared_ptr skirts around that by effectively doing that for us
+typedef std::shared_ptr<Node> NodePtr;
+typedef std::vector<NodePtr> NodeVector;
 
 //? Represents a node that doesn't exist (i.e a missing else statement)
 struct MissingNode : Node
@@ -19,10 +26,10 @@ struct MissingNode : Node
 //* Toplevel node
 struct Program : Node
 {
-    Program(std::vector<Node> declarations) : declarations(declarations) {}
+    Program(NodeVector declarations) : declarations(declarations) {}
     void print();
 
-    std::vector<Node> declarations;
+    NodeVector declarations;
 };
 
 //* Statements
@@ -30,130 +37,131 @@ struct Program : Node
 // * Thing
 struct Thing : Node
 {
-    Thing(std::string name, std::string superclass, std::vector<Node> methods)
+    Thing(std::string name, std::string superclass, NodeVector methods)
         : name(name), superclass(superclass), methods(methods) {}
     void print();
 
     std::string name;
     std::string superclass;
-    std::vector<Node> methods;
+    NodeVector methods;
 };
 
 // * Function
 struct Function : Node
 {
-    Function(std::string name, std::vector<std::string> params, Node body)
+    Function(std::string name, std::vector<std::string> params, NodePtr body)
         : name(name), params(params), body(body) {}
     void print();
 
     std::string name;
     std::vector<std::string> params;
-    Node body;
+    NodePtr body;
 };
 
 // * Var
 struct Var : Node
 {
-    Var(std::string name, Node initializer)
+    Var(std::string name, NodePtr initializer)
         : name(name), initializer(initializer) {}
     void print();
 
     std::string name;
-    Node initializer;
+    NodePtr initializer;
 };
 
 // * For
 struct For : Node
 {
-    For(Node initializer, Node condition, Node increment, Node body)
-        : initializer(initializer), condition(condition), increment(increment), body(body) {}
+    For(NodePtr initializer, NodePtr condition, NodePtr increment, NodePtr body)
+        : initializer(initializer), condition(condition),
+          increment(increment), body(body) {}
     void print();
 
-    Node initializer;
-    Node condition;
-    Node increment;
-    Node body;
+    NodePtr initializer;
+    NodePtr condition;
+    NodePtr increment;
+    NodePtr body;
 };
 
 // * If
 struct If : Node
 {
-    If(Node condition, Node then_branch, Node else_branch)
+    If(NodePtr condition, NodePtr then_branch, NodePtr else_branch)
         : condition(condition), then_branch(then_branch), else_branch(else_branch) {}
     void print();
 
-    Node condition;
-    Node then_branch;
-    Node else_branch;
+    NodePtr condition;
+    NodePtr then_branch;
+    NodePtr else_branch;
 };
 
 // * Include
 struct Include : Node
 {
-    Include(Node file) : file(file) {}
+    Include(NodePtr file) : file(file) {}
     void print();
 
-    Node file;
+    NodePtr file;
 };
 
 // * Return
 struct Return : Node
 {
-    Return(Node value) : value(value) {}
+    Return(NodePtr value) : value(value) {}
     void print();
 
-    Node value;
+    NodePtr value;
 };
 
 // * Switch
 struct Switch : Node
 {
-    Switch(Node condition, std::vector<Node> cases, Node default_)
+    Switch(NodePtr condition, NodeVector cases, NodePtr default_)
         : condition(condition), cases(cases), default_(default_) {}
     void print();
 
-    Node condition;
-    std::vector<Node> cases;
-    Node default_;
+    NodePtr condition;
+    NodeVector cases;
+    NodePtr default_;
 };
 
 // * When
 struct When : Node
 {
-    When(Node condition, Node body) : condition(condition), body(body) {}
+    When(NodePtr condition, NodePtr body) : condition(condition), body(body) {}
     void print();
 
-    Node condition;
-    Node body;
+    NodePtr condition;
+    NodePtr body;
 };
 
 // * While
 struct While : Node
 {
-    While(Node condition, Node body)
+    While(NodePtr condition, NodePtr body)
         : condition(condition), body(body) {}
     void print();
 
-    Node condition;
-    Node body;
+    NodePtr condition;
+    NodePtr body;
 };
 
 // * Yield
 struct YieldN : Node //! Yield is a fucking macro on windows
 {
-    YieldN(Node value) : value(value) {}
+    YieldN(NodePtr value) : value(value) {}
     void print();
 
-    Node value;
+    NodePtr value;
 };
 
 // * Block
 struct Block : public Node
 {
-    Block(std::vector<Node> statements) : statements(statements) {}
+    Block(NodeVector statements) : statements(statements) {}
     void print();
 
-    std::vector<Node> statements;
+    NodeVector statements;
 };
 
 //* Expressions
@@ -161,78 +169,78 @@ struct Block : public Node
 // * Assignment
 struct Assign : Node
 {
-    Assign(std::string name, Node value)
+    Assign(std::string name, NodePtr value)
         : name(name), value(value) {}
     void print();
 
     std::string name;
-    Node value;
+    NodePtr value;
 };
 
 struct Set : Node
 {
-    Set(Node object, std::string name, Node value)
+    Set(NodePtr object, std::string name, NodePtr value)
         : object(object), name(name), value(value) {}
     void print();
 
-    Node object;
+    NodePtr object;
     std::string name;
-    Node value;
+    NodePtr value;
 };
 
 // * Logical
 struct Logical : Node
 {
-    Logical(Node left, std::string _operator, Node right)
+    Logical(NodePtr left, std::string _operator, NodePtr right)
         : left(left), _operator(_operator), right(right) {}
     void print();
 
-    Node left;
+    NodePtr left;
     std::string _operator;
-    Node right;
+    NodePtr right;
 };
 
 // * Binary
 struct Binary : Node
 {
-    Binary(Node left, std::string _operator, Node right)
+    Binary(NodePtr left, std::string _operator, NodePtr right)
         : left(left), _operator(_operator), right(right) {}
     void print();
 
-    Node left;
+    NodePtr left;
     std::string _operator;
-    Node right;
+    NodePtr right;
 };
 
 // * Unary
 struct Unary : Node
 {
-    Unary(std::string _operator, Node right)
+    Unary(std::string _operator, NodePtr right)
         : _operator(_operator), right(right) {}
     void print();
 
     std::string _operator;
-    Node right;
+    NodePtr right;
 };
 
 // * Call
 struct Call : Node
 {
-    Call(Node callee, std::vector<Node> arguments)
+    Call(NodePtr callee, NodeVector arguments)
         : callee(callee), arguments(arguments) {}
     void print();
 
-    Node callee;
-    std::vector<Node> arguments;
+    NodePtr callee;
+    NodeVector arguments;
 };
 
 struct Get : Node
 {
-    Get(Node object, std::string name)
+    Get(NodePtr object, std::string name)
         : object(object), name(name) {}
     void print();
 
-    Node object;
+    NodePtr object;
     std::string name;
 };
 
@@ -270,10 +278,10 @@ struct Super : Node
 
 struct Grouping : Node
 {
-    Grouping(Node expression) : expression(expression) {}
+    Grouping(NodePtr expression) : expression(expression) {}
     void print();
 
-    Node expression;
+    NodePtr expression;
 };
 
 // * Literal gets special treatment because templates :)

@@ -4,19 +4,19 @@
 void Program::print()
 {
     std::cout << "Program: " << std::endl;
-    for (Node declaration : declarations)
+    for (auto &declaration : declarations)
     {
-        declaration.print();
+        declaration->print();
     }
 }
 
 void Thing::print()
 {
     std::cout << "thing " << name << " < " << superclass;
-    for (Node method : methods)
+    for (auto &method : methods)
     {
         std::cout << " ";
-        method.print();
+        method->print();
     }
 }
 
@@ -28,87 +28,87 @@ void Function::print()
         std::cout << param << ", ";
     }
     std::cout << ")";
-    body.print();
+    body->print();
 }
 
 void Var::print()
 {
     std::cout << "var " << name << " = ";
-    initializer.print();
+    initializer->print();
 }
 
 void For::print()
 {
     std::cout << "for ";
-    initializer.print();
+    initializer->print();
     std::cout << ", ";
-    condition.print();
+    condition->print();
     std::cout << ", ";
-    increment.print();
-    body.print();
+    increment->print();
+    body->print();
 }
 
 void If::print()
 {
     std::cout << "if ";
-    condition.print();
-    then_branch.print();
+    condition->print();
+    then_branch->print();
     std::cout << "else ";
-    else_branch.print();
+    else_branch->print();
 }
 
 void Include::print()
 {
     std::cout << "include ";
-    file.print();
+    file->print();
 }
 
 void Return::print()
 {
     std::cout << "return ";
-    value.print();
+    value->print();
 }
 
 void Switch::print()
 {
     std::cout << "switch ";
-    condition.print();
+    condition->print();
     std::cout << " { ";
-    for (Node case_ : cases)
+    for (auto &case_ : cases)
     {
-        case_.print();
+        case_->print();
     }
     std::cout << " else ";
-    default_.print();
+    default_->print();
     std::cout << " } ";
 }
 
 void When::print()
 {
     std::cout << "when ";
-    condition.print();
-    body.print();
+    condition->print();
+    body->print();
 }
 
 void While::print()
 {
     std::cout << "while";
-    condition.print();
-    body.print();
+    condition->print();
+    body->print();
 }
 
 void YieldN::print()
 {
     std::cout << "yield ";
-    value.print();
+    value->print();
 }
 
 void Block::print()
 {
     std::cout << "{";
-    for (Node statement : statements)
+    for (auto &statement : statements)
     {
-        statement.print();
+        statement->print();
     }
     std::cout << "}";
 }
@@ -116,43 +116,43 @@ void Block::print()
 void Assign::print()
 {
     std::cout << name << " = ";
-    value.print();
+    value->print();
 }
 
 void Set::print()
 {
-    object.print();
+    object->print();
     std::cout << "." << name << " = ";
-    value.print();
+    value->print();
 }
 
 void Logical::print()
 {
-    left.print();
+    left->print();
     std::cout << " " << _operator << " ";
-    right.print();
+    right->print();
 }
 
 void Binary::print()
 {
-    left.print();
+    left->print();
     std::cout << " " << _operator << " ";
-    right.print();
+    right->print();
 }
 
 void Unary::print()
 {
     std::cout << _operator;
-    right.print();
+    right->print();
 }
 
 void Call::print()
 {
-    callee.print();
+    callee->print();
     std::cout << "(";
-    for (Node arg : arguments)
+    for (auto &arg : arguments)
     {
-        arg.print();
+        arg->print();
         std::cout << ", ";
     }
     std::cout << ")";
@@ -160,7 +160,7 @@ void Call::print()
 
 void Get::print()
 {
-    object.print();
+    object->print();
     std::cout << "." << name;
 }
 
@@ -192,6 +192,6 @@ void Super::print()
 void Grouping::print()
 {
     std::cout << "(";
-    expression.print();
+    expression->print();
     std::cout << ")";
 }
