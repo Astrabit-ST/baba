@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "lib/baba/version"
-
 Gem::Specification.new do |spec|
   spec.name = "baba"
-  spec.version = Baba::VERSION
+  spec.version = "2.6.0"
   spec.authors = ["Matthew Lyons"]
   spec.email = ["matthew@nowaffles.com"]
 
@@ -27,6 +25,7 @@ Gem::Specification.new do |spec|
   spec.bindir = "exe"
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
+  spec.extensions = ["ext/baba_vm/extconf.rb"]
 
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"

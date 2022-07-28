@@ -1,19 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "baba/version"
-require_relative "baba/interpreter"
-require_relative "baba/resolver"
-require_relative "baba"
-require_relative "baba/api"
+require_relative "baba/baba_vm"
 
 class Baba
-  @@had_error = false
-
-  def initialize
-    @interpreter = Interpreter.new
-    @parser = BabaParser.new
-  end
-
   def main
     case ARGV.length
     when 1
@@ -37,7 +26,7 @@ class Baba
   require "readline"
 
   def run_interactive
-    prompt = "irbaba (#{VERSION}) > "
+    prompt = "irbaba (#{"2.6.0"}) > "
     use_history = true
     while buf = Readline.readline(prompt, use_history)
       break if buf == "exit"
@@ -45,22 +34,5 @@ class Baba
       run(buf)
       @@had_error = false
     end
-  end
-
-  def run(source)
-    @interpreter.execution_limit = @execution_limit
-
-    begin
-      statements = @parser.scan_str(source)
-    rescue Racc::ParseError
-      return
-    end
-
-    resolver = Resolver.new(@interpreter)
-    resolver.resolve(statements)
-
-    return if @@had_error
-
-    @interpreter.interpret(statements)
   end
 end
