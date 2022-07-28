@@ -30,8 +30,7 @@ VALUE rb_baba_run(VALUE self, VALUE string)
     TypedData_Get_Struct(self, Baba, &baba_type, data);
 
     Chunk chunk;
-    for (int i = 0; i < 100000; i++)
-        data->compiler.compile(source, &chunk);
+    data->compiler.compile(source, &chunk);
     return Qfalse;
 }
 
