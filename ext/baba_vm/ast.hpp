@@ -12,11 +12,15 @@ struct Node
     virtual void print() {}
 };
 
-//? We use shared_ptr to avoid dealing with memory management
+//? We use unique_ptr to avoid dealing with memory management
 //? Otherwise, we'd have to manually manage memory for each node, and that's a pain in the ass
-//? shared_ptr skirts around that by effectively doing that for us
-typedef std::shared_ptr<Node> NodePtr;
+//? unique_ptr skirts around that by effectively doing that for us
+typedef std::unique_ptr<Node> NodePtr;
 typedef std::vector<NodePtr> NodeVector;
+
+#define MoveNode(node) std::move(node)
+#define MakeNode(type) NodePtr(new type)
+#define MakeMissing MakeNode(MissingNode())
 
 //? Represents a node that doesn't exist (i.e a missing else statement)
 struct MissingNode : Node
@@ -26,7 +30,7 @@ struct MissingNode : Node
 //* Toplevel node
 struct Program : Node
 {
-    Program(NodeVector declarations) : declarations(declarations) {}
+    Program(NodeVector declarations) : declarations(MoveNode(declarations)) {}
     void print();
 
     NodeVector declarations;
@@ -38,7 +42,7 @@ struct Program : Node
 struct Thing : Node
 {
     Thing(std::string name, std::string superclass, NodeVector methods)
-        : name(name), superclass(superclass), methods(methods) {}
+        : name(name), superclass(superclass), methods(MoveNode(methods)) {}
     void print();
 
     std::string name;
@@ -50,7 +54,7 @@ struct Thing : Node
 struct Function : Node
 {
     Function(std::string name, std::vector<std::string> params, NodePtr body)
-        : name(name), params(params), body(body) {}
+        : name(name), params(MoveNode(params)), body(MoveNode(body)) {}
     void print();
 
     std::string name;
@@ -62,7 +66,7 @@ struct Function : Node
 struct Var : Node
 {
     Var(std::string name, NodePtr initializer)
-        : name(name), initializer(initializer) {}
+        : name(name), initializer(MoveNode(initializer)) {}
     void print();
 
     std::string name;
@@ -73,8 +77,8 @@ struct Var : Node
 struct For : Node
 {
     For(NodePtr initializer, NodePtr condition, NodePtr increment, NodePtr body)
-        : initializer(initializer), condition(condition),
-          increment(increment), body(body) {}
+        : initializer(MoveNode(initializer)), condition(MoveNode(condition)),
+          increment(MoveNode(increment)), body(MoveNode(body)) {}
     void print();
 
     NodePtr initializer;
@@ -87,7 +91,7 @@ struct For : Node
 struct If : Node
 {
     If(NodePtr condition, NodePtr then_branch, NodePtr else_branch)
-        : condition(condition), then_branch(then_branch), else_branch(else_branch) {}
+        : condition(MoveNode(condition)), then_branch(MoveNode(then_branch)), else_branch(MoveNode(else_branch)) {}
     void print();
 
     NodePtr condition;
@@ -98,7 +102,7 @@ struct If : Node
 // * Include
 struct Include : Node
 {
-    Include(NodePtr file) : file(file) {}
+    Include(NodePtr file) : file(MoveNode(file)) {}
     void print();
 
     NodePtr file;
@@ -107,7 +111,7 @@ struct Include : Node
 // * Return
 struct Return : Node
 {
-    Return(NodePtr value) : value(value) {}
+    Return(NodePtr value) : value(MoveNode(value)) {}
     void print();
 
     NodePtr value;
@@ -117,7 +121,7 @@ struct Return : Node
 struct Switch : Node
 {
     Switch(NodePtr condition, NodeVector cases, NodePtr default_)
-        : condition(condition), cases(cases), default_(default_) {}
+        : condition(MoveNode(condition)), cases(MoveNode(cases)), default_(MoveNode(default_)) {}
     void print();
 
     NodePtr condition;
@@ -128,7 +132,7 @@ struct Switch : Node
 // * When
 struct When : Node
 {
-    When(NodePtr condition, NodePtr body) : condition(condition), body(body) {}
+    When(NodePtr condition, NodePtr body) : condition(MoveNode(condition)), body(MoveNode(body)) {}
     void print();
 
     NodePtr condition;
@@ -139,7 +143,7 @@ struct When : Node
 struct While : Node
 {
     While(NodePtr condition, NodePtr body)
-        : condition(condition), body(body) {}
+        : condition(MoveNode(condition)), body(MoveNode(body)) {}
     void print();
 
     NodePtr condition;
@@ -149,7 +153,7 @@ struct While : Node
 // * Yield
 struct YieldN : Node //! Yield is a fucking macro on windows
 {
-    YieldN(NodePtr value) : value(value) {}
+    YieldN(NodePtr value) : value(MoveNode(value)) {}
     void print();
 
     NodePtr value;
@@ -158,7 +162,7 @@ struct YieldN : Node //! Yield is a fucking macro on windows
 // * Block
 struct Block : public Node
 {
-    Block(NodeVector statements) : statements(statements) {}
+    Block(NodeVector statements) : statements(MoveNode(statements)) {}
     void print();
 
     NodeVector statements;
@@ -170,7 +174,7 @@ struct Block : public Node
 struct Assign : Node
 {
     Assign(std::string name, NodePtr value)
-        : name(name), value(value) {}
+        : name(name), value(MoveNode(value)) {}
     void print();
 
     std::string name;
@@ -180,7 +184,7 @@ struct Assign : Node
 struct Set : Node
 {
     Set(NodePtr object, std::string name, NodePtr value)
-        : object(object), name(name), value(value) {}
+        : object(MoveNode(object)), name(name), value(MoveNode(value)) {}
     void print();
 
     NodePtr object;
@@ -192,7 +196,7 @@ struct Set : Node
 struct Logical : Node
 {
     Logical(NodePtr left, std::string _operator, NodePtr right)
-        : left(left), _operator(_operator), right(right) {}
+        : left(MoveNode(left)), _operator(_operator), right(MoveNode(right)) {}
     void print();
 
     NodePtr left;
@@ -204,7 +208,7 @@ struct Logical : Node
 struct Binary : Node
 {
     Binary(NodePtr left, std::string _operator, NodePtr right)
-        : left(left), _operator(_operator), right(right) {}
+        : left(MoveNode(left)), _operator(_operator), right(MoveNode(right)) {}
     void print();
 
     NodePtr left;
@@ -216,7 +220,7 @@ struct Binary : Node
 struct Unary : Node
 {
     Unary(std::string _operator, NodePtr right)
-        : _operator(_operator), right(right) {}
+        : _operator(_operator), right(MoveNode(right)) {}
     void print();
 
     std::string _operator;
@@ -227,7 +231,7 @@ struct Unary : Node
 struct Call : Node
 {
     Call(NodePtr callee, NodeVector arguments)
-        : callee(callee), arguments(arguments) {}
+        : callee(MoveNode(callee)), arguments(MoveNode(arguments)) {}
     void print();
 
     NodePtr callee;
@@ -237,7 +241,7 @@ struct Call : Node
 struct Get : Node
 {
     Get(NodePtr object, std::string name)
-        : object(object), name(name) {}
+        : object(MoveNode(object)), name(name) {}
     void print();
 
     NodePtr object;
@@ -278,7 +282,7 @@ struct Super : Node
 
 struct Grouping : Node
 {
-    Grouping(NodePtr expression) : expression(expression) {}
+    Grouping(NodePtr expression) : expression(MoveNode(expression)) {}
     void print();
 
     NodePtr expression;

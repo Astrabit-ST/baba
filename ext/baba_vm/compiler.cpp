@@ -10,11 +10,15 @@ bool Compiler::compile(const char *source, Chunk *chunk)
     yy::Parser parser(scanner, root_node);
     // parser.set_debug_level(1);
 
-    yy_scan_string(source, scanner);
+    YY_BUFFER_STATE buf = yy_scan_string(source, scanner);
 
-    if (parser.parse())
-        return false; //! Failed to parse
+    if (!parser.parse())
+    {
+        root_node->print();
+    }
 
-    root_node->print();
-    return true;
+    yy_delete_buffer(buf, scanner);
+    yylex_destroy(scanner);
+    root_node.reset(NULL);
+    return false;
 }

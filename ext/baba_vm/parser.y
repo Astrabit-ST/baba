@@ -2,8 +2,6 @@
     #include "lexer.hpp"
     #include <string>
     #include <vector>
-
-    #define MakeNode(type) NodePtr(new type)
 %}
 
 %code requires {
@@ -24,6 +22,7 @@
 %define api.parser.class {Parser}
 %define api.value.type variant
 %define parse.trace true
+%define api.value.automove true
 %param {yyscan_t scanner}
 %parse-param {NodePtr &root}
 
@@ -160,8 +159,7 @@ parameters:
 
 var_declaration: kVAR tIDENTIFIER
 {
-    auto m = MakeNode(MissingNode());
-    $$ = MakeNode(Var($2, m));
+    $$ = MakeNode(Var($2, MakeMissing));
 } /* var ... */
 | kVAR tIDENTIFIER tEQUAL expression
 {
@@ -208,8 +206,7 @@ for_initializer:
 
 if_statement: kIF expression statement
 {
-    auto m = MakeNode(MissingNode());
-    $$ = MakeNode(If($2, $3, m));
+    $$ = MakeNode(If($2, $3, MakeMissing));
 } /* if ... */
 | kIF expression statement kELSE statement
 {
@@ -223,8 +220,7 @@ if_statement: kIF expression statement
 
 elsif_statement: kELSIF expression statement
 {
-    auto m = MakeNode(MissingNode());
-    $$ = MakeNode(If($2, $3, m));
+    $$ = MakeNode(If($2, $3, MakeMissing));
 } /*  elsif ... */
 | kELSIF expression statement elsif_statement
 {
@@ -250,8 +246,7 @@ return_statement: kRETURN opt_expression
 
 switch_statement: kSWITCH expression tLEFT_BRACE cases tRIGHT_BRACE
 {
-    auto m = MakeNode(MissingNode());
-    $$ = MakeNode(Switch($2, $4, m));
+    $$ = MakeNode(Switch($2, $4, MakeMissing));
 } /* switch ... { ... } */
 | kSWITCH expression tLEFT_BRACE cases kELSE statement tRIGHT_BRACE
 {
@@ -261,13 +256,17 @@ switch_statement: kSWITCH expression tLEFT_BRACE cases tRIGHT_BRACE
 
 cases: kWHEN expression statement
 {
-    auto w = MakeNode(When($2, $3));
-    $$ = NodeVector({w});
+    $$ = NodeVector(); /* {
+        MakeNode(When($2, $3))
+    }); */
 } /* when ... */
 | kWHEN expression statement cases
 {
-    auto w = MakeNode(When($2, $3));
-    $4.insert($4.begin(), w); $$ = $4;
+    $4.insert(
+        $4.begin(),
+        MakeNode(When($2, $3))
+    );
+    $$ = $4;
 } /* when ... when ... */
 ;
 
@@ -438,7 +437,7 @@ arguments:
 } /* nothing */
 | expression
 {
-    $$ = NodeVector({$1});
+    $$ = NodeVector();
 } /* ... */
 | expression tCOMMA arguments
 {
