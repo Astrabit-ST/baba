@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <memory>
-#include <algorithm>
+
+struct Compiler;
 
 struct Node
 {
@@ -13,8 +13,14 @@ struct Node
     {
         // std::cout << "Node destructed" << std::endl;
     }
-    virtual void compile(Chunk *chunk) {}
-    virtual void print() {}
+    virtual void compile(Chunk *chunk, Compiler *compiler)
+    {
+        std::cout << "Default node compile";
+    }
+    virtual void print()
+    {
+        std::cout << "Default node print";
+    }
 };
 
 //? Unique pointer can be a pain in the ass to deal with because of moving,
@@ -48,6 +54,7 @@ typedef std::vector<NodePtr> NodeVector;
 //? Represents a node that doesn't exist (i.e a missing else statement)
 struct MissingNode : Node
 {
+    void print();
 };
 
 //* Toplevel node
@@ -333,7 +340,7 @@ struct Grouping : Node
 template <typename T>
 struct Literal : Node
 {
-    void compile(Chunk *chunk){};
+    void compile(Chunk *chunk, Compiler *compiler){};
     void print()
     {
         std::cout << val;

@@ -1,24 +1,39 @@
 #include "compiler.hpp"
+#include "lexer.hpp"
+#include "parser.hpp"
 #include <iostream>
 
 bool Compiler::compile(const char *source, Chunk *chunk)
 {
+    RawNodePtr root_node = parse(source);
+
+    root_node->print();
+    root_node->compile(chunk, this);
+
+    delete root_node;
+    return success;
+}
+
+RawNodePtr Compiler::parse(const char *source)
+{
     RawNodePtr root_node;
 
+    //? Create and setup scanner
     yyscan_t scanner;
     yylex_init(&scanner);
-    yy::Parser parser(scanner, root_node);
-    // parser.set_debug_level(1);
-
     YY_BUFFER_STATE buf = yy_scan_string(source, scanner);
 
-    if (!parser.parse())
+    //? Create parser
+    yy::Parser parser(scanner, root_node);
+
+    if (parser.parse())
     {
-        root_node->print();
+        success = false;
     }
 
+    //? Clean up
     yy_delete_buffer(buf, scanner);
     yylex_destroy(scanner);
-    delete root_node;
-    return false;
+
+    return root_node;
 }

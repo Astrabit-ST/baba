@@ -17,10 +17,6 @@ class Baba
   def run_file(path)
     f = File.open(path, "rb+")
     run(f.read)
-
-    if @@had_error
-      exit 1
-    end
   end
 
   require "readline"

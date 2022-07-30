@@ -1,6 +1,11 @@
 #include <iostream>
 #include <ast.hpp>
 
+void MissingNode::print()
+{
+    std::cout << "no node";
+}
+
 void Program::print()
 {
     std::cout << "Program: " << std::endl;
