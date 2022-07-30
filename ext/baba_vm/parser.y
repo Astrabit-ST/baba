@@ -22,9 +22,9 @@
 %define api.parser.class {Parser}
 %define api.value.type variant
 %define parse.trace true
-%define api.value.automove true
+/* %define api.value.automove true */
 %param {yyscan_t scanner}
-%parse-param {NodePtr &root}
+%parse-param {RawNodePtr &root}
 
 %token
 tLEFT_PAREN "("
@@ -83,17 +83,17 @@ kYIELD "yield"
 %left tPLUS tMINUS
 %left tSTAR tSLASH tMODULO
 
-%type <NodePtr> declaration thing_declaration does_declaration var_declaration statement
-%type <NodePtr> expression for_statement if_statement elsif_statement include_statement return_statement switch_statement
-%type <NodePtr> while_statement yield_statement block
-%type <NodePtr> assignment logic_or logic_and equality comparison term factor unary call primary
-%type <NodePtr> opt_expression for_initializer function
+%type <RawNodePtr> declaration thing_declaration does_declaration var_declaration statement
+%type <RawNodePtr> expression for_statement if_statement elsif_statement include_statement return_statement switch_statement
+%type <RawNodePtr> while_statement yield_statement block
+%type <RawNodePtr> assignment logic_or logic_and equality comparison term factor unary call primary
+%type <RawNodePtr> opt_expression for_initializer function
 %type <std::string> sign_comparison sign_equality sign_factor sign_term sign_unary
-%type <NodeVector> arguments cases statements does_declarations declarations
+%type <RawNodeVector> arguments cases statements does_declarations declarations
 %type <std::vector<std::string>> parameters
 
 %%
-program: declarations { root.reset(new Program($1)); } /* ... */
+program: declarations { root = new Program($1); } /* ... */
 ;
 
 declaration: thing_declaration /* thing ... */
@@ -104,11 +104,13 @@ declaration: thing_declaration /* thing ... */
 
 declarations:
 {
-    $$ = NodeVector();
+    $$ = RawNodeVector();
 } /* nothing */
 | declaration declarations
 {
-    $2.insert($2.begin(), $1); $$ = $2;
+    auto declarations = $2;
+    declarations.insert(declarations.begin(), $1);
+    $$ = declarations;
 } /* ... ... */
 ;
 
@@ -130,7 +132,7 @@ does_declaration: kDOES function
 
 does_declarations:
 {
-    $$ = NodeVector();
+    $$ = RawNodeVector();
 } /* nothing */
 | does_declaration does_declarations
 {
@@ -180,11 +182,13 @@ statement: expression /* ... */
 
 statements:
 {
-    $$ = NodeVector();
+    $$ = RawNodeVector();
 } /* nothing */
 | statement statements
 {
-    $2.insert($2.begin(), $1); $$ = $2;
+    auto statements = $2;
+    statements.insert(statements.begin(), $1);
+    $$ = statements;
 } /* ... ... */
 ;
 
@@ -256,17 +260,18 @@ switch_statement: kSWITCH expression tLEFT_BRACE cases tRIGHT_BRACE
 
 cases: kWHEN expression statement
 {
-    $$ = NodeVector(); /* {
+    $$ = RawNodeVector({
         MakeNode(When($2, $3))
-    }); */
+    });
 } /* when ... */
 | kWHEN expression statement cases
 {
-    $4.insert(
-        $4.begin(),
+    auto cases = $4;
+    cases.insert(
+        cases.begin(),
         MakeNode(When($2, $3))
     );
-    $$ = $4;
+    $$ = cases;
 } /* when ... when ... */
 ;
 
@@ -433,11 +438,11 @@ call: primary /* ... */
 
 arguments:
 {
-    $$ = NodeVector();
+    $$ = RawNodeVector();
 } /* nothing */
 | expression
 {
-    $$ = NodeVector();
+    $$ = RawNodeVector();
 } /* ... */
 | expression tCOMMA arguments
 {

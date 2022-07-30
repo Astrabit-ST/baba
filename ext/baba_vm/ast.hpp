@@ -5,22 +5,45 @@
 #include <vector>
 #include <iostream>
 #include <memory>
+#include <algorithm>
 
 struct Node
 {
+    virtual ~Node()
+    {
+        // std::cout << "Node destructed" << std::endl;
+    }
     virtual void compile(Chunk *chunk) {}
     virtual void print() {}
 };
 
+//? Unique pointer can be a pain in the ass to deal with because of moving,
+//? so we don't actually pass them around in the parser- we only have them as members of the structs
+//? at which point we don't need to care about moving them, since they have reached their owner
+
+//? Raw node pointer type
+typedef Node *RawNodePtr;
+//? A vector of raw node pointers
+typedef std::vector<RawNodePtr> RawNodeVector;
+
 //? We use unique_ptr to avoid dealing with memory management
 //? Otherwise, we'd have to manually manage memory for each node, and that's a pain in the ass
 //? unique_ptr skirts around that by effectively doing that for us
+
+//? A smart pointer to a Node
 typedef std::unique_ptr<Node> NodePtr;
+//? A vector of node spart pointers
 typedef std::vector<NodePtr> NodeVector;
 
 #define MoveNode(node) std::move(node)
-#define MakeNode(type) NodePtr(new type)
+#define MakeNode(type) new type
 #define MakeMissing MakeNode(MissingNode())
+#define RawVector2SmartVector(name)                      \
+    for (auto it = name.begin(); it != name.end(); it++) \
+    {                                                    \
+        int index = std::distance(name.begin(), it);     \
+        this->name[index].reset(*it);                    \
+    }
 
 //? Represents a node that doesn't exist (i.e a missing else statement)
 struct MissingNode : Node
@@ -30,7 +53,11 @@ struct MissingNode : Node
 //* Toplevel node
 struct Program : Node
 {
-    Program(NodeVector declarations) : declarations(MoveNode(declarations)) {}
+    Program(RawNodeVector declarations)
+        : declarations(declarations.size())
+    {
+        RawVector2SmartVector(declarations);
+    }
     void print();
 
     NodeVector declarations;
@@ -41,8 +68,11 @@ struct Program : Node
 // * Thing
 struct Thing : Node
 {
-    Thing(std::string name, std::string superclass, NodeVector methods)
-        : name(name), superclass(superclass), methods(MoveNode(methods)) {}
+    Thing(std::string name, std::string superclass, RawNodeVector methods)
+        : name(name), superclass(superclass), methods(methods.size())
+    {
+        RawVector2SmartVector(methods);
+    }
     void print();
 
     std::string name;
@@ -53,8 +83,8 @@ struct Thing : Node
 // * Function
 struct Function : Node
 {
-    Function(std::string name, std::vector<std::string> params, NodePtr body)
-        : name(name), params(MoveNode(params)), body(MoveNode(body)) {}
+    Function(std::string name, std::vector<std::string> params, RawNodePtr body)
+        : name(name), params(params), body(body) {}
     void print();
 
     std::string name;
@@ -65,8 +95,8 @@ struct Function : Node
 // * Var
 struct Var : Node
 {
-    Var(std::string name, NodePtr initializer)
-        : name(name), initializer(MoveNode(initializer)) {}
+    Var(std::string name, RawNodePtr initializer)
+        : name(name), initializer(initializer) {}
     void print();
 
     std::string name;
@@ -76,9 +106,9 @@ struct Var : Node
 // * For
 struct For : Node
 {
-    For(NodePtr initializer, NodePtr condition, NodePtr increment, NodePtr body)
-        : initializer(MoveNode(initializer)), condition(MoveNode(condition)),
-          increment(MoveNode(increment)), body(MoveNode(body)) {}
+    For(RawNodePtr initializer, RawNodePtr condition, RawNodePtr increment, RawNodePtr body)
+        : initializer(initializer), condition(condition),
+          increment(increment), body(body) {}
     void print();
 
     NodePtr initializer;
@@ -90,8 +120,8 @@ struct For : Node
 // * If
 struct If : Node
 {
-    If(NodePtr condition, NodePtr then_branch, NodePtr else_branch)
-        : condition(MoveNode(condition)), then_branch(MoveNode(then_branch)), else_branch(MoveNode(else_branch)) {}
+    If(RawNodePtr condition, RawNodePtr then_branch, RawNodePtr else_branch)
+        : condition(condition), then_branch(then_branch), else_branch(else_branch) {}
     void print();
 
     NodePtr condition;
@@ -102,7 +132,7 @@ struct If : Node
 // * Include
 struct Include : Node
 {
-    Include(NodePtr file) : file(MoveNode(file)) {}
+    Include(RawNodePtr file) : file(file) {}
     void print();
 
     NodePtr file;
@@ -111,7 +141,7 @@ struct Include : Node
 // * Return
 struct Return : Node
 {
-    Return(NodePtr value) : value(MoveNode(value)) {}
+    Return(RawNodePtr value) : value(value) {}
     void print();
 
     NodePtr value;
@@ -120,8 +150,11 @@ struct Return : Node
 // * Switch
 struct Switch : Node
 {
-    Switch(NodePtr condition, NodeVector cases, NodePtr default_)
-        : condition(MoveNode(condition)), cases(MoveNode(cases)), default_(MoveNode(default_)) {}
+    Switch(RawNodePtr condition, RawNodeVector cases, RawNodePtr default_)
+        : condition(condition), cases(cases.size()), default_(default_)
+    {
+        RawVector2SmartVector(cases);
+    }
     void print();
 
     NodePtr condition;
@@ -132,7 +165,8 @@ struct Switch : Node
 // * When
 struct When : Node
 {
-    When(NodePtr condition, NodePtr body) : condition(MoveNode(condition)), body(MoveNode(body)) {}
+    When(RawNodePtr condition, RawNodePtr body)
+        : condition(condition), body(body) {}
     void print();
 
     NodePtr condition;
@@ -142,8 +176,8 @@ struct When : Node
 // * While
 struct While : Node
 {
-    While(NodePtr condition, NodePtr body)
-        : condition(MoveNode(condition)), body(MoveNode(body)) {}
+    While(RawNodePtr condition, RawNodePtr body)
+        : condition(condition), body(body) {}
     void print();
 
     NodePtr condition;
@@ -153,7 +187,7 @@ struct While : Node
 // * Yield
 struct YieldN : Node //! Yield is a fucking macro on windows
 {
-    YieldN(NodePtr value) : value(MoveNode(value)) {}
+    YieldN(RawNodePtr value) : value(value) {}
     void print();
 
     NodePtr value;
@@ -162,7 +196,10 @@ struct YieldN : Node //! Yield is a fucking macro on windows
 // * Block
 struct Block : public Node
 {
-    Block(NodeVector statements) : statements(MoveNode(statements)) {}
+    Block(RawNodeVector statements) : statements(statements.size())
+    {
+        RawVector2SmartVector(statements);
+    }
     void print();
 
     NodeVector statements;
@@ -173,8 +210,8 @@ struct Block : public Node
 // * Assignment
 struct Assign : Node
 {
-    Assign(std::string name, NodePtr value)
-        : name(name), value(MoveNode(value)) {}
+    Assign(std::string name, RawNodePtr value)
+        : name(name), value(value) {}
     void print();
 
     std::string name;
@@ -183,8 +220,8 @@ struct Assign : Node
 
 struct Set : Node
 {
-    Set(NodePtr object, std::string name, NodePtr value)
-        : object(MoveNode(object)), name(name), value(MoveNode(value)) {}
+    Set(RawNodePtr object, std::string name, RawNodePtr value)
+        : object(object), name(name), value(value) {}
     void print();
 
     NodePtr object;
@@ -195,8 +232,8 @@ struct Set : Node
 // * Logical
 struct Logical : Node
 {
-    Logical(NodePtr left, std::string _operator, NodePtr right)
-        : left(MoveNode(left)), _operator(_operator), right(MoveNode(right)) {}
+    Logical(RawNodePtr left, std::string _operator, RawNodePtr right)
+        : left(left), _operator(_operator), right(right) {}
     void print();
 
     NodePtr left;
@@ -207,8 +244,8 @@ struct Logical : Node
 // * Binary
 struct Binary : Node
 {
-    Binary(NodePtr left, std::string _operator, NodePtr right)
-        : left(MoveNode(left)), _operator(_operator), right(MoveNode(right)) {}
+    Binary(RawNodePtr left, std::string _operator, RawNodePtr right)
+        : left(left), _operator(_operator), right(right) {}
     void print();
 
     NodePtr left;
@@ -219,8 +256,8 @@ struct Binary : Node
 // * Unary
 struct Unary : Node
 {
-    Unary(std::string _operator, NodePtr right)
-        : _operator(_operator), right(MoveNode(right)) {}
+    Unary(std::string _operator, RawNodePtr right)
+        : _operator(_operator), right(right) {}
     void print();
 
     std::string _operator;
@@ -230,8 +267,11 @@ struct Unary : Node
 // * Call
 struct Call : Node
 {
-    Call(NodePtr callee, NodeVector arguments)
-        : callee(MoveNode(callee)), arguments(MoveNode(arguments)) {}
+    Call(RawNodePtr callee, RawNodeVector arguments)
+        : callee(callee), arguments(arguments.size())
+    {
+        RawVector2SmartVector(arguments);
+    }
     void print();
 
     NodePtr callee;
@@ -240,8 +280,8 @@ struct Call : Node
 
 struct Get : Node
 {
-    Get(NodePtr object, std::string name)
-        : object(MoveNode(object)), name(name) {}
+    Get(RawNodePtr object, std::string name)
+        : object(object), name(name) {}
     void print();
 
     NodePtr object;
@@ -282,7 +322,7 @@ struct Super : Node
 
 struct Grouping : Node
 {
-    Grouping(NodePtr expression) : expression(MoveNode(expression)) {}
+    Grouping(RawNodePtr expression) : expression(expression) {}
     void print();
 
     NodePtr expression;

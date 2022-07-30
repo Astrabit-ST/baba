@@ -3,7 +3,7 @@
 
 bool Compiler::compile(const char *source, Chunk *chunk)
 {
-    NodePtr root_node;
+    RawNodePtr root_node;
 
     yyscan_t scanner;
     yylex_init(&scanner);
@@ -19,6 +19,6 @@ bool Compiler::compile(const char *source, Chunk *chunk)
 
     yy_delete_buffer(buf, scanner);
     yylex_destroy(scanner);
-    root_node.reset(NULL);
+    delete root_node;
     return false;
 }
