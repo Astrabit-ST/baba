@@ -7,10 +7,13 @@ bool Compiler::compile(const char *source, Chunk *chunk)
 {
     RawNodePtr root_node = parse(source);
 
-    root_node->print();
-    root_node->compile(chunk, this);
+    if (success)
+    {
+        root_node->print();
+        root_node->compile(chunk, this);
 
-    delete root_node;
+        delete root_node;
+    }
     return success;
 }
 

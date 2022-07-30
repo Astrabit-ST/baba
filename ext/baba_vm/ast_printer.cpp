@@ -12,6 +12,7 @@ void Program::print()
     for (auto &declaration : declarations)
     {
         declaration->print();
+        std::cout << std::endl;
     }
 }
 
@@ -20,7 +21,7 @@ void Thing::print()
     std::cout << "thing " << name << " < " << superclass;
     for (auto &method : methods)
     {
-        std::cout << " ";
+        std::cout << std::endl;
         method->print();
     }
 }
@@ -34,6 +35,7 @@ void Function::print()
     }
     std::cout << ")";
     body->print();
+    std::cout << std::endl;
 }
 
 void Var::print()
@@ -81,10 +83,12 @@ void Switch::print()
     std::cout << " { ";
     for (auto &case_ : cases)
     {
+        std::cout << std::endl;
         case_->print();
     }
     std::cout << " else ";
     default_->print();
+    std::cout << std::endl;
     std::cout << " } ";
 }
 
@@ -113,8 +117,10 @@ void Block::print()
     std::cout << "{";
     for (auto &statement : statements)
     {
+        std::cout << std::endl;
         statement->print();
     }
+    std::cout << std::endl;
     std::cout << "}";
 }
 

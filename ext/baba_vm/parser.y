@@ -22,6 +22,7 @@
 %define api.parser.class {Parser}
 %define api.value.type variant
 %define parse.trace true
+%define parse.error detailed
 /* %define api.value.automove true */
 %param {yyscan_t scanner}
 %parse-param {RawNodePtr &root}
@@ -89,7 +90,7 @@ kYIELD "yield"
 %type <RawNodePtr> assignment logic_or logic_and equality comparison term factor unary call primary
 %type <RawNodePtr> opt_expression for_initializer function
 %type <std::string> sign_comparison sign_equality sign_factor sign_term sign_unary
-%type <RawNodeVector> arguments cases statements does_declarations declarations
+%type <RawNodeVector> arguments cases does_declarations declarations
 %type <std::vector<std::string>> parameters
 
 %%
@@ -178,18 +179,6 @@ statement: expression /* ... */
 | while_statement /* while ... */
 | yield_statement /* yield ... */
 | block /* { ... } */
-;
-
-statements:
-{
-    $$ = RawNodeVector();
-} /* nothing */
-| statement statements
-{
-    auto statements = $2;
-    statements.insert(statements.begin(), $1);
-    $$ = statements;
-} /* ... ... */
 ;
 
 /* for ... , ... , ... */
@@ -287,7 +276,7 @@ yield_statement: kYIELD opt_expression
 } /* yield ... */
 ;
 
-block: tLEFT_BRACE statements tRIGHT_BRACE
+block: tLEFT_BRACE declarations tRIGHT_BRACE
 {
     $$ = MakeNode(Block($2));
 } /* { ... } */
@@ -442,7 +431,7 @@ arguments:
 } /* nothing */
 | expression
 {
-    $$ = RawNodeVector();
+    $$ = RawNodeVector({$1});
 } /* ... */
 | expression tCOMMA arguments
 {
