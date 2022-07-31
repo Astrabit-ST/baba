@@ -22,7 +22,7 @@
 %define api.parser.class {Parser}
 %define api.value.type variant
 %define parse.trace true
-%define parse.error detailed
+%define parse.error verbose
 /* %define api.value.automove true */
 %param {yyscan_t scanner}
 %parse-param {RawNodePtr &root}
