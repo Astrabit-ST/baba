@@ -26,13 +26,6 @@ You can also create classes and methods in a "ruby extension" and load them in b
 
 # Todo
 
-- [x] Ruby API
-- [x] Yield
-- [x] Resume & Pause & Autoyield
-- [x] Switch statement
-- [x] Next
-- [x] Move to rexical and racc
-- [x] Rewrite interpreter and code in general to be better
 - [ ] Basic standard library (IO, Time, etc)
 - [ ] Better include statement
 - [ ] Include ruby files
@@ -46,3 +39,4 @@ You can also create classes and methods in a "ruby extension" and load them in b
 - [ ] Operator overloading
 - [ ] +=, \*= etc...
 - [ ] Metaclasses
+- [ ] Move to ANTLR

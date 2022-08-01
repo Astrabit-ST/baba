@@ -1,5 +1,5 @@
 #include <ruby.h>
-#include "common.hpp"
+#include "chunk.hpp"
 #include "vm.hpp"
 #include "compiler.hpp"
 
@@ -30,8 +30,12 @@ VALUE rb_baba_run(VALUE self, VALUE string)
     TypedData_Get_Struct(self, Baba, &baba_type, data);
 
     Chunk chunk;
-    data->compiler.compile(source, &chunk);
-    return Qfalse;
+    InterpretResult result = COMPILE_ERROR;
+    if (data->compiler.compile(source, &chunk))
+    {
+        result = data->vm.interpret(&chunk);
+    }
+    return INT2NUM(result);
 }
 
 VALUE rb_baba_alloc(VALUE self)

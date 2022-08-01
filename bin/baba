@@ -3,4 +3,5 @@
 require_relative "../lib/baba"
 require "benchmark"
 
-puts Benchmark.measure { Baba.new.main }
+baba = Baba.new
+puts Benchmark.measure { baba.main }

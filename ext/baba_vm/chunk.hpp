@@ -5,8 +5,7 @@
 #include <cstdint>
 #include <iostream>
 #include <iomanip>
-
-typedef double BabaValue;
+#include "value.hpp"
 
 const short VERSION = 260; //* 2.6.0
 
@@ -26,25 +25,31 @@ public:
     std::vector<BabaValue> constants;
 };
 
-//? Print a value to cout
-void printValue(BabaValue value);
-
 enum OpCode
 {
     //? Followed by 1 byte to denote constant index
     OP_CONSTANT,
     //? Followed by 2 bytes to denote constant index
     OP_CONSTANT_LONG,
-    //? + operator
+    //? Constant literals (nil, false, etc)
+    OP_NIL,
+    OP_TRUE,
+    OP_FALSE,
+    //? Comparison operators
+    OP_EQUAL,
+    OP_NOT_EQUAL,
+    OP_GREATER,
+    OP_LESS,
+    OP_GREATER_EQUAL,
+    OP_LESS_EQUAL,
+    //? Arithmetic operators
     OP_ADD,
-    //? - operator
     OP_SUBTRACT,
-    //? * operator
     OP_MULTIPLY,
-    //? / uperator
     OP_DIVIDE,
-    //? % operator
     OP_MODULO,
+    //? Not unary operator
+    OP_NOT,
     //? Negate unary operator
     OP_NEGATE,
     //? Signal end of bytecode

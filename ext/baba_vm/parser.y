@@ -89,7 +89,7 @@ kYIELD "yield"
 %type <RawNodePtr> while_statement yield_statement block
 %type <RawNodePtr> assignment logic_or logic_and equality comparison term factor unary call primary
 %type <RawNodePtr> opt_expression for_initializer function
-%type <std::string> sign_comparison sign_equality sign_factor sign_term sign_unary
+%type <Sign> sign_comparison sign_equality sign_factor sign_term sign_unary
 %type <RawNodeVector> arguments cases does_declarations declarations
 %type <std::vector<std::string>> parameters
 
@@ -306,14 +306,14 @@ assignment: tIDENTIFIER tEQUAL assignment
 logic_or: logic_and /* ... */
 | logic_and kOR logic_or
 {
-    $$ = MakeNode(Logical($1, "or", $3));
+    $$ = MakeNode(Logical($1, OR, $3));
 } /* ... || ... || ... */
 ;
 
 logic_and: equality /* ... */
 | equality kAND logic_and
 {
-    $$ = MakeNode(Logical($1, "and", $3));
+    $$ = MakeNode(Logical($1, AND, $3));
 } /* ... && ... && ... */
 ;
 
@@ -326,11 +326,11 @@ equality: comparison /* ... */
 
 sign_equality: tEQUAL_EQUAL
 {
-    $$ = "==";
+    $$ = EQUAL_EQUAL;
 } /* == */
 | tNOT_EQUAL
 {
-    $$ = "~=";
+    $$ = NOT_EQUAL;
 } /* != */
 ;
 
@@ -343,19 +343,19 @@ comparison: term
 
 sign_comparison: tLESS
 {
-    $$ = "<";
+    $$ = LESS;
 } /* < */
 | tGREATER
 {
-    $$ = ">";
+    $$ = GREATER;
 } /* > */
 | tLESS_EQUAL
 {
-    $$ = "<=";
+    $$ = LESS_EQUAL;
 } /* <= */
 | tGREATER_EQUAL
 {
-    $$ = ">=";
+    $$ = GREATER_EQUAL;
 } /* >= */
 ;
 
@@ -368,11 +368,11 @@ term: factor
 
 sign_term: tPLUS
 {
-    $$ = "+";
+    $$ = PLUS;
 } /* + */
 | tMINUS
 {
-    $$ = "-";
+    $$ = MINUS;
 } /* - */
 ;
 
@@ -385,15 +385,15 @@ factor: unary /* ... */
 
 sign_factor: tSTAR
 {
-    $$ = "*";
+    $$ = STAR;
 } /* * */
 | tSLASH
 {
-    $$ = "/";
+    $$ = SLASH;
 } /* / */
 | tMODULO
 {
-    $$ = "%";
+    $$ = MODULO;
 } /* % */
 ;
 
@@ -406,11 +406,11 @@ unary: call /* ... */
 
 sign_unary: tMINUS
 {
-    $$ = "-";
+    $$ = MINUS;
 } /* - */
 | tNOT
 {
-    $$ = "!";
+    $$ = NOT;
 } /* ! */
 ;
 

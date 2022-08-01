@@ -1,6 +1,54 @@
 #include <iostream>
 #include <ast.hpp>
 
+void print_sign(Sign sign)
+{
+    switch (sign)
+    {
+    case PLUS:
+        std::cout << "+";
+        break;
+    case MINUS:
+        std::cout << "-";
+        break;
+    case SLASH:
+        std::cout << "/";
+        break;
+    case STAR:
+        std::cout << "*";
+        break;
+    case MODULO:
+        std::cout << "%";
+        break;
+    case EQUAL_EQUAL:
+        std::cout << "==";
+        break;
+    case NOT_EQUAL:
+        std::cout << "!=";
+        break;
+    case NOT:
+        std::cout << "!";
+    case AND:
+        std::cout << "&&";
+        break;
+    case OR:
+        std::cout << "||";
+        break;
+    case GREATER:
+        std::cout << ">";
+        break;
+    case LESS:
+        std::cout << "<";
+        break;
+    case GREATER_EQUAL:
+        std::cout << ">=";
+        break;
+    case LESS_EQUAL:
+        std::cout << "<=";
+        break;
+    }
+}
+
 void MissingNode::print()
 {
     std::cout << "no node";
@@ -140,20 +188,24 @@ void Set::print()
 void Logical::print()
 {
     left->print();
-    std::cout << " " << _operator << " ";
+    std::cout << " ";
+    print_sign(_operator);
+    std::cout << " ";
     right->print();
 }
 
 void Binary::print()
 {
     left->print();
-    std::cout << " " << _operator << " ";
+    std::cout << " ";
+    print_sign(_operator);
+    std::cout << " ";
     right->print();
 }
 
 void Unary::print()
 {
-    std::cout << _operator;
+    print_sign(_operator);
     right->print();
 }
 
@@ -205,4 +257,28 @@ void Grouping::print()
     std::cout << "(";
     expression->print();
     std::cout << ")";
+}
+
+template <>
+void Literal<void *>::print()
+{
+    std::cout << "blank";
+}
+
+template <>
+void Literal<bool>::print()
+{
+    std::cout << (val ? "true" : "false");
+}
+
+template <>
+void Literal<double>::print()
+{
+    std::cout << val;
+}
+
+template <>
+void Literal<std::string>::print()
+{
+    std::cout << val;
 }

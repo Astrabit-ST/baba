@@ -8,7 +8,7 @@ ALPHA   [a-z_]\w*
 BLANK   [\ \t]+
 NEWLINE (\n|\r\n)
 CONSTANT ([A-Z])
-STRING  "([^"]|\\")*"
+STRING  \"(\\.|[^"\\])*\"
 
 %option noyywrap
 %option full
@@ -22,7 +22,13 @@ STRING  "([^"]|\\")*"
 
 {BLANK} /* ignore blanks */
 {NEWLINE} /* ignore newlines */
-{STRING} { yylval->emplace<std::string>(std::string(yytext)); return Parser::token::tSTRING; }
+{STRING} {
+            std::string str = std::string(yytext);
+            str.erase(str.begin());
+            str.erase(str.end()-1);
+            yylval->emplace<std::string>(str);
+            return Parser::token::tSTRING;
+         }
 "#".*\n /* ignore comments */
 "(" { return Parser::token::tLEFT_PAREN; }
 ")" { return Parser::token::tRIGHT_PAREN; }
@@ -68,6 +74,7 @@ STRING  "([^"]|\\")*"
 "await" { return Parser::token::kAWAIT; }
 "yield" { return Parser::token::kYIELD; }
 "include" { return Parser::token::kINCLUDE; }
+"blank" { return Parser::token::kBLANK; }
 {DIGIT}+(.{DIGIT}+)? { yylval->emplace<double>(std::stod(yytext)); return Parser::token::tNUMBER; }
 {CONSTANT}({ALPHA}|{DIGIT})* { yylval->emplace<std::string>(std::string(yytext)); return Parser::token::tCONSTANT; }
 {ALPHA}({ALPHA}|{DIGIT})* { yylval->emplace<std::string>(std::string(yytext)); return Parser::token::tIDENTIFIER; }

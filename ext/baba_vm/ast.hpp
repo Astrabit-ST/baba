@@ -1,6 +1,6 @@
 #ifndef AST_H
 #define AST_H
-#include "common.hpp"
+#include "chunk.hpp"
 #include <string>
 #include <vector>
 #include <iostream>
@@ -15,12 +15,30 @@ struct Node
     }
     virtual void compile(Chunk *chunk, Compiler *compiler)
     {
-        std::cout << "Default node compile";
+        throw "Default node compile function called (missing override?)";
     }
     virtual void print()
     {
         std::cout << "Default node print";
     }
+};
+
+enum Sign
+{
+    PLUS,
+    MINUS,
+    SLASH,
+    STAR,
+    MODULO,
+    NOT,
+    LESS,
+    LESS_EQUAL,
+    GREATER,
+    GREATER_EQUAL,
+    NOT_EQUAL,
+    EQUAL_EQUAL,
+    AND,
+    OR,
 };
 
 //? Unique pointer can be a pain in the ass to deal with because of moving,
@@ -65,6 +83,7 @@ struct Program : Node
     {
         RawVector2SmartVector(declarations);
     }
+    void compile(Chunk *chunk, Compiler *compiler);
     void print();
 
     NodeVector declarations;
@@ -239,35 +258,37 @@ struct Set : Node
 // * Logical
 struct Logical : Node
 {
-    Logical(RawNodePtr left, std::string _operator, RawNodePtr right)
+    Logical(RawNodePtr left, Sign _operator, RawNodePtr right)
         : left(left), _operator(_operator), right(right) {}
     void print();
 
     NodePtr left;
-    std::string _operator;
+    Sign _operator;
     NodePtr right;
 };
 
 // * Binary
 struct Binary : Node
 {
-    Binary(RawNodePtr left, std::string _operator, RawNodePtr right)
+    Binary(RawNodePtr left, Sign _operator, RawNodePtr right)
         : left(left), _operator(_operator), right(right) {}
     void print();
+    void compile(Chunk *chunk, Compiler *compiler);
 
     NodePtr left;
-    std::string _operator;
+    Sign _operator;
     NodePtr right;
 };
 
 // * Unary
 struct Unary : Node
 {
-    Unary(std::string _operator, RawNodePtr right)
+    Unary(Sign _operator, RawNodePtr right)
         : _operator(_operator), right(right) {}
     void print();
+    void compile(Chunk *chunk, Compiler *compiler);
 
-    std::string _operator;
+    Sign _operator;
     NodePtr right;
 };
 
@@ -340,14 +361,12 @@ struct Grouping : Node
 template <typename T>
 struct Literal : Node
 {
-    void compile(Chunk *chunk, Compiler *compiler){};
-    void print()
-    {
-        std::cout << val;
-    }
+    void compile(Chunk *chunk, Compiler *compiler);
+    void print();
 
     Literal(T t) : val(t) {}
 
     T val;
 };
+
 #endif

@@ -1,4 +1,5 @@
-#include "common.hpp"
+#include "chunk.hpp"
+#include "object.hpp"
 
 void Chunk::write(uint8_t byte, int line)
 {
@@ -28,9 +29,4 @@ void Chunk::writeConstant(BabaValue value, int line)
         write(index & 0xff, line);
         write((index >> 8) & 0xff, line);
     }
-}
-
-void printValue(BabaValue value)
-{
-    std::cout << "'" << value << "'";
 }

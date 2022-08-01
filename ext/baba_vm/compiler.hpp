@@ -1,6 +1,6 @@
 #ifndef COMPILER_H
 #define COMPILER_H
-#include "common.hpp"
+#include "chunk.hpp"
 #include "ast.hpp"
 
 struct Compiler
