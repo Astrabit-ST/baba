@@ -15,6 +15,7 @@ if debug
   $CFLAGS += " -g "
   $CXXFLAGS += " -g "
 end
+$CFLAGS += " -std=c++17 "
 
 usr_dir = if Gem.win_platform? #* Treat windows like a special needs child
     `cygpath -w /usr`.gsub(/\n/, "").gsub(/\\/, "/") #? Strip newline and swap backslashes for forward slashes
