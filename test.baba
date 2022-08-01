@@ -1,0 +1,10 @@
+thing MyObj {
+    does func() {
+        yield self.b
+    }
+}
+
+var a = MyObj()
+a.b = 15
+a.c = a.func
+a.c()

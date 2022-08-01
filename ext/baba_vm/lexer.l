@@ -4,10 +4,8 @@
 %}
 
 DIGIT   [0-9]
-ALPHA   [a-z_]\w*
 BLANK   [\ \t]+
 NEWLINE (\n|\r\n)
-CONSTANT ([A-Z])
 STRING  \"(\\.|[^"\\])*\"
 
 %option noyywrap
@@ -76,8 +74,7 @@ STRING  \"(\\.|[^"\\])*\"
 "include" { return Parser::token::kINCLUDE; }
 "blank" { return Parser::token::kBLANK; }
 {DIGIT}+(.{DIGIT}+)? { yylval->emplace<double>(std::stod(yytext)); return Parser::token::tNUMBER; }
-{CONSTANT}({ALPHA}|{DIGIT})* { yylval->emplace<std::string>(std::string(yytext)); return Parser::token::tCONSTANT; }
-{ALPHA}({ALPHA}|{DIGIT})* { yylval->emplace<std::string>(std::string(yytext)); return Parser::token::tIDENTIFIER; }
+[[:alpha:]][[:alnum:]-]* { yylval->emplace<std::string>(std::string(yytext)); return Parser::token::tIDENTIFIER; }
 .  /* unknown character */
 
 %%

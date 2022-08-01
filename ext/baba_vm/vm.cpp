@@ -3,7 +3,7 @@
 #include <cmath>
 #include <cstdarg>
 
-// #define DEBUG_TRACE
+#define DEBUG_TRACE
 
 InterpretResult VM::interpret(Chunk *chunk)
 {

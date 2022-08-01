@@ -5,18 +5,15 @@
 #include <vector>
 #include <iostream>
 #include <memory>
+#include <stdexcept>
 
 struct Compiler;
 
 struct Node
 {
-    virtual ~Node()
-    {
-        // std::cout << "Node destructed" << std::endl;
-    }
     virtual void compile(Chunk *chunk, Compiler *compiler)
     {
-        throw "Default node compile function called (missing override?)";
+        throw std::runtime_error("Default node compile function called (missing override?)");
     }
     virtual void print()
     {

@@ -73,7 +73,6 @@ kAWAIT "await" /* unused */
 kYIELD "yield"
 
 %token <std::string> tIDENTIFIER
-%token <std::string> tCONSTANT
 %token <std::string> tSTRING
 %token <double> tNUMBER
 
@@ -115,11 +114,11 @@ declarations:
 } /* ... ... */
 ;
 
-thing_declaration: kTHING tCONSTANT tLEFT_BRACE does_declarations tRIGHT_BRACE
+thing_declaration: kTHING tIDENTIFIER tLEFT_BRACE does_declarations tRIGHT_BRACE
 {
     $$ = MakeNode(Thing($2, "", $4));
 } /* thing ... */
-| kTHING tCONSTANT tLESS tCONSTANT tLEFT_BRACE does_declarations tRIGHT_BRACE
+| kTHING tIDENTIFIER tLESS tIDENTIFIER tLEFT_BRACE does_declarations tRIGHT_BRACE
 {
     $$ = MakeNode(Thing($2, $4, $6));
 } /* thing ... < ... */
@@ -468,10 +467,6 @@ primary: tNUMBER
     $$ = MakeNode(Next());
 }
 | tIDENTIFIER
-{
-    $$ = MakeNode(Variable($1));
-}
-| tCONSTANT
 {
     $$ = MakeNode(Variable($1));
 }

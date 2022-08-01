@@ -10,7 +10,7 @@ bool Compiler::compile(const char *source, Chunk *chunk)
 
     if (success)
     {
-        // root_node->print();
+        root_node->print();
         root_node->compile(chunk, this);
 
         delete root_node;
@@ -30,6 +30,7 @@ RawNodePtr Compiler::parse(const char *source)
 
     //? Create parser
     yy::Parser parser(scanner, root_node);
+    // parser.set_debug_level(1);
 
     if (parser.parse())
     {
