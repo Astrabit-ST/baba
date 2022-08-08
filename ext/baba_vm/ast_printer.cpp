@@ -49,11 +49,6 @@ void print_sign(Sign sign)
     }
 }
 
-void MissingNode::print()
-{
-    std::cout << "no node";
-}
-
 void Program::print()
 {
     std::cout << "Program: " << std::endl;

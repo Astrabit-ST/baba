@@ -1,37 +1,21 @@
-#ifndef OBJECT_HPP
-#define OBJECT_HPP
+#ifndef OBJECT_H
+#define OBJECT_H
 
-#include "value.hpp"
 #include <string>
 
-enum ObjectType
+typedef Value BasicObject *;
+
+struct BasicObject
 {
-    OBJ_STRING,
+    void define_method(std::string name, Value (*fn)(...), int argc);
 };
 
-struct Object
+struct Object : public BasicObject
 {
-    ObjectType type;
 };
 
-struct BabaString : Object
+struct Class : public Object
 {
-    BabaString(std::string str);
-
-    std::string str;
 };
-
-#define OBJ_TYPE(value) VAL2OBJ(value)->type
-#define IS_STRING(value) isObjType(value, OBJ_STRING)
-#define VAL2STR(value) ((BabaString *)VAL2OBJ(value))->str
-#define STR2VAL(value) OBJ2VAL(new BabaString(value))
-
-inline bool
-isObjType(BabaValue value, ObjectType type)
-{
-    return IS_OBJ(value) && OBJ_TYPE(value) == type;
-}
-
-void printObject(BabaValue value);
 
 #endif

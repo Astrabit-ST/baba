@@ -59,19 +59,13 @@ typedef std::vector<NodePtr> NodeVector;
 
 #define MoveNode(node) std::move(node)
 #define MakeNode(type) new type
-#define MakeMissing MakeNode(MissingNode())
+#define MakeMissing nullptr
 #define RawVector2SmartVector(name)                      \
     for (auto it = name.begin(); it != name.end(); it++) \
     {                                                    \
         int index = std::distance(name.begin(), it);     \
         this->name[index].reset(*it);                    \
     }
-
-//? Represents a node that doesn't exist (i.e a missing else statement)
-struct MissingNode : Node
-{
-    void print();
-};
 
 //* Toplevel node
 struct Program : Node
@@ -122,6 +116,7 @@ struct Var : Node
     Var(std::string name, RawNodePtr initializer)
         : name(name), initializer(initializer) {}
     void print();
+    void compile(Chunk *chunk, Compiler *compiler);
 
     std::string name;
     NodePtr initializer;

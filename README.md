@@ -26,12 +26,14 @@ You can also create classes and methods in a "ruby extension" and load them in b
 
 # Todo
 
+- [ ] Default Object superclass
+- [ ] Everything is an object:tm:
+- [ ] Move to ANTLR
+- [ ] Garbage collection (Threaded Mark & Sweep?)
 - [ ] Basic standard library (IO, Time, etc)
 - [ ] Better include statement
 - [ ] Include ruby files
-- [ ] Default Object superclass
 - [ ] Lists
-- [ ] Everything is an object:tm:
 - [ ] Splat args
 - [ ] Default args
 - [ ] rb_call
@@ -39,4 +41,3 @@ You can also create classes and methods in a "ruby extension" and load them in b
 - [ ] Operator overloading
 - [ ] +=, \*= etc...
 - [ ] Metaclasses
-- [ ] Move to ANTLR

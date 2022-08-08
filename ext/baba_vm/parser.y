@@ -190,7 +190,7 @@ for_statement: kFOR for_initializer tCOMMA opt_expression tCOMMA opt_expression 
 /* var ... | ... */
 for_initializer:
 {
-    $$ = MakeNode(MissingNode());
+    $$ = MakeMissing;
 } /* nothing */
 | var_declaration
 | expression
@@ -286,7 +286,7 @@ expression: assignment /* ... */
 
 opt_expression:
 {
-    $$ = MakeNode(MissingNode());
+    $$ = MakeMissing;
 } /* nothing */
 | expression /* ... */
 ;
