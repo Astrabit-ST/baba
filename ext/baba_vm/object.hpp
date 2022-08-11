@@ -3,14 +3,15 @@
 
 #include <string>
 
-/* A basic, barebones object which all objects inherit from */
-struct BasicObject
-{
-    /* Define a method on this class */
-    void define_method(std::string name, Value (*fn)(...), int argc);
-};
+struct BasicObject;
+typedef BasicObject *Value;
 
-typedef Value BasicObject *;
+/* A basic, barebones object which all objects inherit from */
+struct BasicObject 
+{
+  /* Define a method on this class */
+  void define_method(std::string name, Value (*fn)(...), int argc);
+};
 
 /* To be defined in object.cpp */
 extern Value Object;
